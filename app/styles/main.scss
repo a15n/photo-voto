@@ -89,3 +89,36 @@ body {
         border-bottom: 0;
     }
 }
+
+/*MY ADDITIONS*/
+
+html, body {
+    height:100%;
+    margin:0;
+    padding:0;
+    background-color: #222222;
+}
+
+
+
+.photo_box {
+    /*float: right;*/
+    margin: 0 auto;
+}
+
+.photos {
+    display: inline-block;
+    padding: 1%;
+}
+
+.photo {
+    border: 1px solid #FFFFFF;
+    border-radius: 5px;
+    margin: 0 auto;
+}
+
+.text_box {
+    color: blue;
+}
+
+

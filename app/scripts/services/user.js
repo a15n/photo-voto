@@ -15,5 +15,5 @@ angular.module('photoVotoApp')
           id:'me'
         }
       }
-	  });
+    });
   });
