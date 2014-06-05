@@ -1,13 +1,11 @@
 <div class="container-fluid">
-
-  <ul class="row col-md-8" id="photo-box">
-    <li class="col-sm-6 col-xs-6 no-padding"><img src="../../images/sunset.png"></li>
-    <li class="col-sm-6 col-xs-6 no-padding"><img src="../../images/sunset.png"></li>
-    <li class="col-sm-6 col-xs-6 no-padding"><img src="../../images/sunset.png"></li>
-    <li class="col-sm-6 col-xs-6 no-padding"><img src="../../images/sunset.png"></li>
+  <ul id="photo-box" class="row col-md-8">
+    <li class="col-sm-6 col-xs-6 no-padding" ng-repeat="photo in photos | limitTo: 4">
+      <img ng-src="{{photo.images.standard_resolution.url}}">
+    </li>
   </ul>
 
-  <div class="col col-md-4 text-center" id="text-box">
+  <div id="text-box" class="col col-md-4 text-center">
     <h1>San Francisco, CA</h1>
     <h2>Golden Gate Bridge</h2>
     <p>
@@ -15,5 +13,6 @@
 
       The Frommers travel guide considers the Golden Gate Bridge "possibly the most beautiful, certainly the most photographed, bridge in the world". It opened in 1937 and had, until 1964, the longest suspension bridge main span in the world, at 4,200 feet (1,300 m).
     </p>
+
   </div>
 </div>
