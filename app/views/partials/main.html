@@ -8,25 +8,19 @@
   <div id="text-box" class="col col-md-4 text-center">
     <br>
     <br>
-    <h1 class="bira attraction">Golden Gate Bridge</h1>
+    <h1 class="bira attraction">{{page.title.text}}</h1>
     <h2 class="bira city">San Francisco, CA</h2>
-    <span class="glyphicon glyphicon-fire"></span>
-    <p>Let's find/make a unique "glyphicon"</p>
-    <h3>4.5/5.0 stars (will be visual)</h3>
-    <h4>"A treasure of a Bridge in the U.S."</h4>
-    <h4>"Great views!!!"</h4>
+    <h3>{{page.rating.alt}}</h3>
+    <h4>"{{page.review1.text}}"</h4>
+    <h4>"{{page.review2.text}}"</h4>
 
-    <p>
-      The Golden Gate Bridge is not the oldest suspension bridge nor the newest.  It is no longer the tallest or the highest.  Yet it remains the most visited and photographed bridge in...
-    </p>
-<!--     <p>
-      The Golden Gate Bridge is a suspension bridge spanning the Golden Gate strait, the mile-wide, three-mile-long channel between San Francisco Bay and the Pacific Ocean. The structure links the U.S. city of San Francisco, on the northern tip of the San Francisco Peninsula, to Marin County, bridging both U.S. Route 101 and California State Route 1 across the strait. The bridge is one of the most internationally recognized symbols of San Francisco, California, and the United States. It has been declared one of the Wonders of the Modern World by the American Society of Civil Engineers. The Frommers travel guide considers the Golden Gate Bridge "possibly the most beautiful, certainly the most photographed, bridge in the world". It opened in 1937 and had, until 1964, the longest suspension bridge main span in the world, at 4,200 feet (1,300 m).
-    </p> -->
-    <div class="btn-group">
+    <p>{{page.description2[1]}}</p>
+    <form class="btn-group" ng-click="i = i + 1">
       <button type="button" class="btn btn-default btn-custom">
-        next (program me)
+        next
       </button>
-    </div>
+    </form>
+    <p>To: do, remove non-bira characters from ALL text</p>
 
   </div>
 </div>

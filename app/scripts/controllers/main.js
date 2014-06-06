@@ -1,12 +1,14 @@
 'use strict';
 
 var simpleHashtag = function (inputString) {
-  return inputString.split(" ").join("");
+  return inputString.replace(/\W/g,'').split(" ").join("");
 };
 
 var getUrl = function (tag) {
       return 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32&callback=JSON_CALLBACK';
+      // return 'https://api.instagram.com/v1/tags/' + tag + '?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32&callback=JSON_CALLBACK';
     };
+      // return 'https://api.instagram.com/v1/tags/' + tag + 'search?q=snowy&access_token=418954256.f59def8.2ecd8c03f3d14d2aaa3ed5da8cf10789'
 
 var page = {
   "san francisco 1": [
@@ -1095,13 +1097,15 @@ var page = {
 
 angular.module('photoVotoApp')
   .controller('MainCtrl', function ($scope, $http) {
-    $scope.page = page;
-    console.log($scope.page);
+    $scope.i = 5;
+    $scope.page = page["san francisco 1"][$scope.i];
+    // console.log($scope.page);
 
 
-    $http.jsonp(getUrl('GoldenGate'))
+    $http.jsonp(getUrl(simpleHashtag($scope.page.title.text)))
     .success(function(data) {
       $scope.photos = data.data;
+      console.log($scope.photos);
     })
     .error( function () {
     });
