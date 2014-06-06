@@ -90,6 +90,8 @@ body {
     }
 }
 
+/*my stuff*/
+
 ul {
   padding:0 0 0 0;
   margin:0 0 0 0;
@@ -120,3 +122,29 @@ html,body {
 #text-box {
   color: #FFFFFF;
 }
+
+.btn-custom {
+  border-radius: 25px;
+}
+
+@font-face {
+    font-family: Bira;
+    src: url(../assets/fonts/bira/Bira_PERSONAL_USE_ONLY.ttf);
+    font-weight:400; /*weight TBD*/
+}
+
+.bira {
+    font-family: Bira, Helvetica, Arial, sans-serif;
+}
+
+.attraction {
+  font-size: 72px;
+  line-height: 80%;
+}
+
+.city {
+  font-size: 46px;
+  line-height: 80%;
+}
+
+

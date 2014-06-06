@@ -1,37 +1,4 @@
-<div class="container-fluid">
-  <ul id="photo-box" class="row col-md-8">
-    <li class="col-sm-6 col-xs-6 no-padding" ng-repeat="photo in photos | limitTo: 4">
-      <img ng-src="{{photo.images.standard_resolution.url}}">
-    </li>
-  </ul>
-
-  <div id="text-box" class="col col-md-4 text-center">
-    <br>
-    <br>
-    <h1 class="bira attraction">Golden Gate Bridge</h1>
-    <h2 class="bira city">San Francisco, CA</h2>
-    <span class="glyphicon glyphicon-fire"></span>
-    <p>Let's find/make a unique "glyphicon"</p>
-    <h3>4.5/5.0 stars (will be visual)</h3>
-    <h4>"A treasure of a Bridge in the U.S."</h4>
-    <h4>"Great views!!!"</h4>
-
-    <p>
-      The Golden Gate Bridge is not the oldest suspension bridge nor the newest.  It is no longer the tallest or the highest.  Yet it remains the most visited and photographed bridge in...
-    </p>
-<!--     <p>
-      The Golden Gate Bridge is a suspension bridge spanning the Golden Gate strait, the mile-wide, three-mile-long channel between San Francisco Bay and the Pacific Ocean. The structure links the U.S. city of San Francisco, on the northern tip of the San Francisco Peninsula, to Marin County, bridging both U.S. Route 101 and California State Route 1 across the strait. The bridge is one of the most internationally recognized symbols of San Francisco, California, and the United States. It has been declared one of the Wonders of the Modern World by the American Society of Civil Engineers. The Frommers travel guide considers the Golden Gate Bridge "possibly the most beautiful, certainly the most photographed, bridge in the world". It opened in 1937 and had, until 1964, the longest suspension bridge main span in the world, at 4,200 feet (1,300 m).
-    </p> -->
-    <div class="btn-group">
-      <button type="button" class="btn btn-default btn-custom">
-        next (program me)
-      </button>
-    </div>
-
-  </div>
-</div>
-
-<!-- {
+{
   "san francisco 1": [
     {
       "title": {
@@ -1114,6 +1081,4 @@
       ]
     }
   ]
-} -->
-
-<!-- Voto: Crowd-curated photos of the best attractions in the most popular cities in the world -->
+}
