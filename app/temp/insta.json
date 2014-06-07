@@ -1,32 +1,4 @@
-'use strict';
-
-var hashtag = function (inputString) {
-  return inputString.replace(/\W/g,'').split(" ").join("");
-};
-
-var instaUrl = function (tag) {
-      return 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32&callback=JSON_CALLBACK';
-    };
-
-function instaScrub (inputArray, title) {
-  var outputArray = [];
-  var i = 0, j = 0, inputArrayLength = inputArray.length;
-  for (i; i < inputArrayLength; i++) {
-    if (inputArray[i].users_in_photo.length === 0) {
-      outputArray[j] = {};
-      outputArray[j].title = title;
-      outputArray[j].url = inputArray[i].images.standard_resolution.url;
-      outputArray[j].votes = 0;
-      outputArray[j].views = 0;
-      outputArray[j].approval = undefined;
-      outputArray[j].rank = undefined;
-      j++;
-    }
-  };
-  return outputArray;
-}
-
-var page = {
+{
   "san francisco 1": [
     {
       "title": {
@@ -1109,30 +1081,4 @@ var page = {
       ]
     }
   ]
-};
-
-angular.module('photoVotoApp')
-  .controller('MainCtrl', function ($scope, $http) {
-    $scope.i = 2;
-    $scope.page = page["san francisco 1"][$scope.i];
-
-
-    $http.jsonp(instaUrl(hashtag($scope.page.title.text)))
-    .success(function(data) {
-      $scope.photos = data.data;
-      // $scope.scrubbedPhotos = instaScrub(data.data);
-    })
-    .error( function () {
-    });
-
-    // successful post request
-    // var data = $scope.photos;
-    // $http.post('/api/basketball', data)
-    // .success(function(data) {
-    //   console.log('successful post');
-    // });
-  });
-
-//attach jquery event to window.resize
-//SO dynamically resize div based on size of browser window
-//emilolsson.com/shop/demo/l
+}
