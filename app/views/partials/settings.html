@@ -1,37 +1,81 @@
-<div ng-include="'partials/navbar.html'"></div>
+<div class="row" ng-controller="SettingsCtrl">
+  <div class="col-sm-1"></div>
+  <div class="col-sm-10">
+    <div class="col-sm-12">
+      <h1>Add new attractions</h1>
 
-<div class="row">
-  <div class="col-sm-12">
-    <h1>Change Password</h1>
+    </div>
+    <div class="col-sm-12">
+      <form class="form" name="attractions" ng-submit="submitAttractions(attractions)" required novalidate>
+        <!-- add validation -->
+        <div class="form-group">
+          <label>Enter the Trip Advisor -> City -> Attractions URL. It should be in the following format... <br>
+          http://www.tripadvisor.com/Attractions-g60713-Activities-San_Francisco_California.html
+          </label>
+
+          <input type="" name="url" class="form-control" ng-model="url" mongoose-error/>
+          <p class="help-block" ng-show="">
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label>Enter the name of the city</label>
+          <input type="" name="city" class="form-control" ng-model="cityName" required/>
+        </div>
+
+        <div class="form-group">
+          <label>How many pages to include? Each page contains 30 attractions. (1, 2, 3, 4, etc)</label>
+          <input type="" name="pages" class="form-control" ng-model="pages" required/>
+        </div>
+
+        <button class="btn btn-lg btn-primary" type="submit">Submit attractions</button>
+      </form>
+
+
+      <!-- <form ng-submit="submitAttractions(text)">
+        Enter text and hit enter:
+        <input type="text" ng-model="text" name="text" />
+        <input type="submit" id="submit" value="Submit" />
+      </form> -->
+
+
+
+    </div> <!-- add attractions -->
+
+<!--     <div class="col-sm-12">
+
+      <h1>Change Password</h1>
+    </div>
+    <div class="col-sm-12">
+      <form class="form" name="form" ng-submit="changePassword(form)" novalidate>
+
+        <div class="form-group">
+          <label>Current Password</label>
+
+          <input type="password" name="password" class="form-control" ng-model="user.oldPassword"
+                 mongoose-error/>
+          <p class="help-block" ng-show="form.password.$error.mongoose">
+              {{ errors.other }}
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label>New Password</label>
+
+          <input type="password" name="newPassword" class="form-control" ng-model="user.newPassword"
+                 ng-minlength="3"
+                 required/>
+          <p class="help-block"
+             ng-show="(form.newPassword.$error.minlength || form.newPassword.$error.required) && (form.newPassword.$dirty || submitted)">
+            Password must be at least 3 characters.
+          </p>
+        </div>
+
+        <p class="help-block"> {{ message }} </p>
+
+        <button class="btn btn-lg btn-primary" type="submit">Save changes</button>
+      </form>
+    </div> <!-- change password --> -->
   </div>
-  <div class="col-sm-12">
-    <form class="form" name="form" ng-submit="changePassword(form)" novalidate>
-    	
-      <div class="form-group">
-        <label>Current Password</label>
-
-        <input type="password" name="password" class="form-control" ng-model="user.oldPassword"
-               mongoose-error/>    
-        <p class="help-block" ng-show="form.password.$error.mongoose">
-            {{ errors.other }}
-        </p>
-      </div>
-
-      <div class="form-group">
-        <label>New Password</label>
-
-        <input type="password" name="newPassword" class="form-control" ng-model="user.newPassword" 
-               ng-minlength="3"
-               required/>
-        <p class="help-block"
-           ng-show="(form.newPassword.$error.minlength || form.newPassword.$error.required) && (form.newPassword.$dirty || submitted)">
-          Password must be at least 3 characters.
-        </p>
-      </div>
-
-      <p class="help-block"> {{ message }} </p>
-
-      <button class="btn btn-lg btn-primary" type="submit">Save changes</button>
-    </form>
-  </div>
+  <div class="col-sm-1"></div>
 </div>

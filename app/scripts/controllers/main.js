@@ -22,7 +22,7 @@ function instaScrub (inputArray, title) {
       outputArray[j].rank = undefined;
       j++;
     }
-  };
+  }
   return outputArray;
 }
 
