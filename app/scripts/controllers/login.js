@@ -53,7 +53,7 @@ angular.module('photoVotoApp')
       var urls = [url.slice(27)];
       // console.log(urlsLength);
       var finalArray = [];
-      var pages = 5;
+      var pages = 2;
       if (pages > 1) {
         var i = 1;
         var urlLeft = url.slice(27,57);
@@ -66,6 +66,8 @@ angular.module('photoVotoApp')
         }
       }
       var cityName = 'San Francisco';
+
+
       var j = 0;
       var kimonoUrl = "http://www.kimonolabs.com/api/43takhg6?apikey=0a1d375d04e46d6b8ff57584f2c1ddf9&kimpath1=";
       var scrubData = function (getUrl) {
@@ -74,34 +76,37 @@ angular.module('photoVotoApp')
           var k = 0;
           for (k; k < 30; k++) {
             var page = {};
+            var stringLimit = 123;
             page.city = cityName;
             page.attraction = data.results.collection1[k].attraction.text;
+            page.url = data.results.collection1[k].attraction.href;
             page.hashtag = hashtag(page.attraction);
             page.rating = data.results.collection1[k].rating.alt;
             page.review1 = data.results.collection1[k].review1.text;
             page.review2 = data.results.collection1[k].review2.text;
-            // page.description
-
-
-            // page.review1 = data.review1.text;
-            // page.review2 = data.review2.text;
-            console.log(page);
+            if (typeof data.results.collection1[k].description !== "string" && typeof data.results.collection1[k].description[1] === "string") { //is a string
+              if (data.results.collection1[k].description[1].substring(0,5) === "Owner") {
+                page.description = data.results.collection1[k].description[1].slice(19).slice(0,stringLimit);
+              } else {
+                page.description = data.results.collection1[k].description[1].slice(0,stringLimit);
+              }
+            }
+            else if (typeof data.results.collection1[k].description !== "string" && typeof data.results.collection1[k].description[1] === "object") {
+              page.description = data.results.collection1[k].description[1].text.slice(0,stringLimit);
+            }
             finalArray.push(page);
           }
-
-
         });
       };
 
       for (j; j < pages; j++) {
-
         var scrubUrl = kimonoUrl + urls[j];
-        // console.log(scrubUrl);
         scrubData(scrubUrl);
       }
 
+      $scope.TEST = "finalArray";
 
-      $scope.TEST = finalArray;
+
 
 
           // for (k; k < 30; k++) {
@@ -127,3 +132,6 @@ angular.module('photoVotoApp')
 
 
   });
+
+
+
