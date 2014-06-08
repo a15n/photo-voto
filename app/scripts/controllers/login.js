@@ -53,7 +53,7 @@ angular.module('photoVotoApp')
       var urls = [url.slice(27)];
       // console.log(urlsLength);
       var finalArray = [];
-      var pages = 2;
+      var pages = 30;
       if (pages > 1) {
         var i = 1;
         var urlLeft = url.slice(27,57);
@@ -94,6 +94,7 @@ angular.module('photoVotoApp')
             else if (typeof data.results.collection1[k].description !== "string" && typeof data.results.collection1[k].description[1] === "object") {
               page.description = data.results.collection1[k].description[1].text.slice(0,stringLimit);
             }
+            console.log(page);
             finalArray.push(page);
           }
         });
@@ -103,8 +104,8 @@ angular.module('photoVotoApp')
         var scrubUrl = kimonoUrl + urls[j];
         scrubData(scrubUrl);
       }
+      $scope.TEST = finalArray
 
-      $scope.TEST = "finalArray";
 
 
 

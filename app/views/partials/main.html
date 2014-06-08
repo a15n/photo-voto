@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<!-- <div class="container-fluid">
   <ul id="photo-box" class="row col-md-8">
     <li class="col-sm-6 col-xs-6 no-padding" ng-repeat="photo in photos | limitTo: 4">
       <img ng-src="{{photo.images.standard_resolution.url}}">
@@ -15,14 +15,27 @@
     <h4>"{{page.review2.text}}"</h4>
 
     <p>{{page.description[1].text}}</p>
-    <!-- <form class="btn-group" ng-click="i = i + 1">
-      <button type="button" class="btn btn-default btn-custom">
-        next
-      </button>
-    </form> -->
+  </div>
+</div> -->
+<div class="col-sm-8 photo-box">
+  <ul>
+    <li class="col-xs-6 col-xs-6 no-padding" ng-repeat="photo in photos | limitTo: 4">
+      <img ng-src="{{photo.images.standard_resolution.url}}">
+    </li>
+  </ul>
+</div>
+<div class="col-sm-4 text-box text-align">
+  <div>
+    <br>
+    <br>
+    <br>
+    <h1 class="bira attraction">{{page.title.text}}</h1>
+    <h2 class="bira city">San Francisco, CA</h2>
+    <h3>{{page.rating.alt}}</h3>
+    <h4>"{{page.review1.text}}"</h4>
+    <h4>"{{page.review2.text}}"</h4>
+
+    <p>{{page.description[1].text}}</p>
   </div>
 </div>
-<!-- <p>
-{{scrubbedPhotos}}
-</p> -->
 <!-- Voto: Crowd-curated photos of the best attractions in the most popular cities in the world -->

@@ -9,12 +9,6 @@ $icon-font-path: "/bower_components/bootstrap-sass-official/vendor/assets/fonts/
     padding: 0.2em 0;
 }
 
-/* Space out content a bit */
-body {
-    padding-top: 20px;
-    padding-bottom: 20px;
-}
-
 /* Everything but the jumbotron gets side spacing for mobile first views */
 .header,
 .marketing,
@@ -107,35 +101,13 @@ ul li img {
   width: 100%;
 }
 
-.no-padding {
-   padding: 0 !important;
-   margin: 0 !important;
-}
-
-html,body {
-  background-color: #222222;
-  color: #FFFFFF;
-}
-
-#photo-box {
-}
-
-#text-box {
-
-}
-
-.btn-custom {
-  border-radius: 25px;
-}
-
 @font-face {
     font-family: Bira;
     src: url(../assets/fonts/bira/Bira_PERSONAL_USE_ONLY.ttf);
     font-weight:400; /*weight TBD*/
 }
-
 .bira {
-    font-family: Bira, Helvetica, Arial, sans-serif;
+  font-family: Bira, Helvetica, Arial, sans-serif;
 }
 
 .attraction {
@@ -148,4 +120,29 @@ html,body {
   line-height: 90%;
 }
 
+.no-padding {
+  padding: 0 !important;
+  margin: 0 !important;
+}
 
+html,body {
+  background-color: #000000;
+  height: 100%;
+  color: #FFF;
+}
+
+.whole-box {
+  height: 100%;
+  text-align: center;
+}
+
+.photo-box {
+  background-color: #000000;
+  height: 100%;
+
+}
+
+.text-box {
+  background-color: #222222;
+  height: 100%;
+}
