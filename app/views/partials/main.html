@@ -1,41 +1,26 @@
-<!-- <div class="container-fluid">
-  <ul id="photo-box" class="row col-md-8">
-    <li class="col-sm-6 col-xs-6 no-padding" ng-repeat="photo in photos | limitTo: 4">
-      <img ng-src="{{photo.images.standard_resolution.url}}">
-    </li>
-  </ul>
-
-  <div id="text-box" class="col col-md-4 text-center">
-    <br>
-    <br>
-    <h1 class="bira attraction">{{page.title.text}}</h1>
-    <h2 class="bira city">San Francisco, CA</h2>
-    <h3>{{page.rating.alt}}</h3>
-    <h4>"{{page.review1.text}}"</h4>
-    <h4>"{{page.review2.text}}"</h4>
-
-    <p>{{page.description[1].text}}</p>
-  </div>
-</div> -->
 <div class="col-sm-8 photo-box">
-  <ul>
-    <li class="col-xs-6 col-xs-6 no-padding" ng-repeat="photo in photos | limitTo: 4">
-      <img ng-src="{{photo.images.standard_resolution.url}}">
+  <ul class="">
+    <li class="col-xs-6 col-xs-6 no-padding" ng-repeat="photo in photoArray | limitTo: 4">
+      <img ng-click="vote(photo)" ng-src="{{photo.url}}">
     </li>
   </ul>
 </div>
 <div class="col-sm-4 text-box text-align">
   <div>
+    <button type="button" class="btn btn-primary" ng-click="newPage('San Francisco')">
+      Somewhere else
+    </button>
     <br>
     <br>
-    <br>
-    <h1 class="bira attraction">{{page.title.text}}</h1>
-    <h2 class="bira city">San Francisco, CA</h2>
-    <h3>{{page.rating.alt}}</h3>
-    <h4>"{{page.review1.text}}"</h4>
-    <h4>"{{page.review2.text}}"</h4>
-
-    <p>{{page.description[1].text}}</p>
+    <h1 class="bira attraction">{{page.attraction}}</h1>
+    <h2 class="bira city">{{page.city}}</h2>
+    <h3>{{page.rating}}</h3>
+    <h4>{{page.review1}}</h4>
+    <h4>{{page.review2}}</h4>
+    <p>{{page.description}}</p>
   </div>
 </div>
+
+
+
 <!-- Voto: Crowd-curated photos of the best attractions in the most popular cities in the world -->
