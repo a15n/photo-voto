@@ -2,7 +2,7 @@
   <div class="col-sm-1"></div>
   <div class="col-sm-10">
     <div class="col-sm-12">
-      <h1 class="bira attraction">&nbsp;photo-voto</h1>
+      <h1 class="bira attraction">voto</h1>
 <!--             <p>Sign in as administrator</p>
       <p>Accounts are reset on server restart from <code>dummydata.js</code>. Default account is <code>test@test.com</code> / <code>test</code></p>
     </div>
@@ -53,11 +53,10 @@
       </form> -->
 
       <div ng-controller="LoginCtrl" style="color:red">
-        <form novalidate class="simple-form">
-          URL: <input type="text" ng-model="submission.url" /><br><br>
-          City: <input type="text" ng-model="submission.city" /><br><br>
-          Pages: <input type="text" ng-model="submission.pages" /><br><br>
-          <button ng-click="submitAttractions(submission)" class="btn btn-primary">submit attractions</button>
+        <form class="simple-form" ng-submit="submitAttractions(submission)" name="">
+          URL: <input type="text" ng-model="submission.url" name="url" /><br><br>
+          Pages: <input type="text" ng-model="submission.pages" name="pages" /><br><br>
+          <input type="submit" id="submit" value="submit attractions" />
         </form>
         <button ng-click="clearEverything()" class="btn btn-delete">clear attractions</button>
       </div>

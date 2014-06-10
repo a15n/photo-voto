@@ -1,14 +1,31 @@
 <div class="col-sm-8 photo-box">
   <ul class="">
-    <li class="col-xs-6 col-xs-6 no-padding" ng-repeat="photo in photoArray | limitTo: 4">
+    <li class="col-xs-6 col-xs-6 no-padding" ng-repeat="photo in page.photos.photoArray | limitTo: 4">
       <img ng-click="vote(photo)" ng-src="{{photo.url}}">
     </li>
+  </ul>
+  <ul class="" ng-hide="viewed">
+    <li class="col-xs-6 col-xs-6 no-padding">
+      <img ng-click="vote(photo)" src="/../../assets/images/golden_gate_bridge.png">
+    </li>
+    <li class="col-xs-6 col-xs-6 no-padding">
+      <img ng-click="vote(photo)" src="/../../assets/images/big_ben.png">
+    </li>
+    <li class="col-xs-6 col-xs-6 no-padding">
+      <img ng-click="vote(photo)" src="/../../assets/images/empire_state_building.png">
+    </li>
+    <li class="col-xs-6 col-xs-6 no-padding">
+      <img ng-click="vote(photo)" src="/../../assets/images/hong_kong_skyline.png">
+    </li>  <!-- intro page. hides when clicked-->
   </ul>
 </div>
 <div class="col-sm-4 text-box text-align">
   <div>
-    <button type="button" class="btn btn-primary" ng-click="newPage('San Francisco')">
+    <button type="button" class="btn btn-primary" ng-click="newPage()" ng-model="viewed">
       Somewhere else
+    </button>
+    <button type="button" class="btn btn-delete" ng-click="deletePage('Andrew')">
+      Delete
     </button>
     <br>
     <br>
@@ -18,6 +35,14 @@
     <h4>{{page.review1}}</h4>
     <h4>{{page.review2}}</h4>
     <p>{{page.description}}</p>
+  </div>
+  <div ng-hide="viewed">
+    <h1 class="bira attraction">Voto</h1>
+    <h2 class="bira">Crowd-curated photos of the best attractions in the most popular cities in the world</h2>
+    <h3>Click on your favorite image to cast your vote</h3>
+    <h3>Each time you vote you'll show you a new attraction</h3>
+    <h3>The more votes the better the pictures become</h3>
+    <h3>Happy travelling!</h3>  <!-- intro page. hides when clicked-->
   </div>
 </div>
 

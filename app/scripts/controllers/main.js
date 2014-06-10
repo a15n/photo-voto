@@ -36,29 +36,22 @@ angular.module('photoVotoApp')
 
 
     var pageIndex = 0;
+
     $scope.newPage = function (city) {
-      $http.get('/api/v1/Attractions?city=' + city)
-      .success(function(data) {
-        $scope.page = data[pageIndex];
-        // $http.jsonp(instaUrl(hashtag($scope.page.hashtag)))
-        // .success(function(data) {
-        //   $scope.photos = data.data;
-        // });
-
-
-        $http.get('/api/v1/Photos?attraction=' + $scope.page.attraction)
+      $scope.viewed = true;
+      if (city) {
+        //return results with city filtering
+      } else {
+        $http.get('/api/v1/Pages/')
         .success(function(data) {
-          console.log(data);
-          $scope.photos = data[0];
-          $scope.photoArray = data[0].photoArray;
+          $scope.page = data[pageIndex];
+          pageIndex++;
         });
-
-        pageIndex++;
-
-      });
+      }
     };
 
     $scope.vote = function (photo) {
+      $scope.viewed = true;
       for (var i = 0; i < 4; i++) {
         $scope.photoArray[i].views++;
         if ($scope.photoArray[i]._id === photo._id) {
@@ -71,7 +64,9 @@ angular.module('photoVotoApp')
         console.log("put is successful!");
       });
 
-
+    $scope.deletePage = function (name) {
+      console.log(name);
+    };
 
     };
   });
