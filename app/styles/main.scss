@@ -146,3 +146,56 @@ html,body {
   background-color: #222222;
   height: 100%;
 }
+
+.height50 {
+  height:50%;
+}
+
+.height100 {
+  height:100%;
+}
+
+.wdith50 {
+  width:50%;
+}
+
+.width100 {
+  width:100%;
+}
+
+.nmnp {
+  margin: 0 auto;
+  padding: 0;
+
+}
+
+
+#photo_1 {
+    position: absolute;
+    right:0px;
+    bottom:0px;
+}
+
+#photo_2 {
+    position: absolute;
+    left:0px;
+    bottom:0px;
+}
+
+#photo_3 {
+    position: absolute;
+    right:0px;
+    top:0px;
+}
+
+#photo_4 {
+    position: absolute;
+    left:0px;
+    top:0px;
+}
+
+
+
+img:hover {
+  cursor: url('http://www.snazzyspace.com/cursorsfolder/mickey-thumbs-up.png'), auto !important;
+}

@@ -35,6 +35,7 @@ angular.module('photoVotoApp')
       var populatePhotosWithObject = function (hashtag, originalObject) {
         var page = originalObject;
         page.photos = {};
+
         page.photos.royalty = 0;
         page.photos.nonRoyalty = 4;
         page.photos.photoArray = [];
@@ -48,10 +49,8 @@ angular.module('photoVotoApp')
             page.photos.photoArray[m].votes = 0;
             page.photos.photoArray[m].views = 0;
           }
-          //http://repl.it/TsN //do this to pull out array elements with > 1 users_in_photo
           console.log(page.attraction + " " + page.city + " added!!!");
           postToDatabase(page);
-
         });
       };
 
@@ -62,18 +61,21 @@ angular.module('photoVotoApp')
             for (k; k < 30; k++) {                    // k < #: # === attractions per page
               var page = {};
               var stringLimit = 123;
+              var testMe = data.results;
+
               page.city = data.results.collection2[0].city.slice(16);
-
-              page.attraction = data.results.collection1[k].attraction.text.replace(/[&]/g, '');
-              //page.rank     ////Add this in the Kimono API
-
+              page.attraction = data.results.collection1[k].attraction.text.replace(/[&-().]/g, '');
               page.hashtag = page.attraction.replace(/\W/g,'').split(" ").join("");
 
               page.url = data.results.collection1[k].attraction.href;
               page.rating = data.results.collection1[k].rating.alt;
               page.ratingNumber = parseInt(data.results.collection1[k].rating.alt);
-              page.review1 = "\"" + data.results.collection1[k].review1.text + "\"";
-              page.review2 = "\"" + data.results.collection1[k].review2.text + "\"";
+              if (data.results.collection1[k].review1.text !== undefined) {
+                page.review1 = "\"" + data.results.collection1[k].review1.text + "\"";
+              }
+              if (data.results.collection1[k].review2.text !== undefined) {
+                page.review2 = "\"" + data.results.collection1[k].review2.text + "\"";
+              }
               if (typeof data.results.collection1[k].description !== "string" && typeof data.results.collection1[k].description[1] === "string") { //is a string
                 if (data.results.collection1[k].description[1].substring(0,5) === "Owner") {
                   page.description = data.results.collection1[k].description[1].slice(19).slice(0,stringLimit);
@@ -110,6 +112,7 @@ angular.module('photoVotoApp')
       for (var j = 0; j < pages; j++) {
         var masterUrl = kimonoUrl + urls[j];
         andrewApi(masterUrl);   //Andrew API called here pages.length times
+
       }
     };
 

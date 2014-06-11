@@ -1,32 +1,31 @@
-<div class="col-sm-8 photo-box">
-  <ul class="">
-    <li class="col-xs-6 col-xs-6 no-padding" ng-repeat="photo in page.photos.photoArray | limitTo: 4">
-      <img ng-click="vote(photo)" ng-src="{{photo.url}}">
-    </li>
-  </ul>
-  <ul class="" ng-hide="viewed">
-    <li class="col-xs-6 col-xs-6 no-padding">
-      <img ng-click="vote(photo)" src="/../../assets/images/golden_gate_bridge.png">
-    </li>
-    <li class="col-xs-6 col-xs-6 no-padding">
-      <img ng-click="vote(photo)" src="/../../assets/images/big_ben.png">
-    </li>
-    <li class="col-xs-6 col-xs-6 no-padding">
-      <img ng-click="vote(photo)" src="/../../assets/images/empire_state_building.png">
-    </li>
-    <li class="col-xs-6 col-xs-6 no-padding">
-      <img ng-click="vote(photo)" src="/../../assets/images/hong_kong_skyline.png">
-    </li>  <!-- intro page. hides when clicked-->
-  </ul>
+<div class="col-sm-7 photo-box nmnp">
+  <div class="height100 width100">
+    <div class="row width100 height50 nmnp" id="imageRow">
+      <div class="col-xs-6 height100 nmnp">
+        <img src="/../../assets/images/golden_gate_bridge.png" id="photo_1" ng-click="newPage()" ng-hide="viewed">
+        <img ng-click="vote(page, photo.url)" ng-src="{{page.photos.photoArray[0].url}}" id="photo_1" ng-show="viewed">
+      </div>
+
+      <div class="col-xs-6 height100 nmnp">
+        <img src="/../../assets/images/big_ben.png" id="photo_2" ng-click="newPage()" ng-hide="viewed">
+        <img ng-click="vote(page, photo.url)" ng-src="{{page.photos.photoArray[1].url}}" id="photo_2" ng-show="viewed">
+      </div>
+    </div>
+    <div class="row width100 height50 nmnp" id="imageRow">
+      <div class="col-xs-6 height100 nmnp">
+        <img src="/../../assets/images/empire_state_building.png" id="photo_3" ng-click="newPage()" ng-hide="viewed">
+        <img ng-click="vote(page, photo.url)" ng-src="{{page.photos.photoArray[2].url}}" id="photo_3" ng-show="viewed">
+      </div>
+      <div class="col-xs-6 height100 nmnp">
+        <img src="/../../assets/images/hong_kong_skyline.png" id="photo_4" ng-click="newPage()" ng-hide="viewed">
+        <img ng-click="vote(page, photo.url)" ng-src="{{page.photos.photoArray[3].url}}" id="photo_4" ng-show="viewed">
+      </div>
+    </div>
+  </div>
 </div>
-<div class="col-sm-4 text-box text-align">
+
+<div class="col-sm-5 text-box text-align">
   <div>
-    <button type="button" class="btn btn-primary" ng-click="newPage()" ng-model="viewed">
-      Somewhere else
-    </button>
-    <button type="button" class="btn btn-delete" ng-click="deletePage('Andrew')">
-      Delete
-    </button>
     <br>
     <br>
     <h1 class="bira attraction">{{page.attraction}}</h1>
@@ -44,6 +43,7 @@
     <h3>The more votes the better the pictures become</h3>
     <h3>Happy travelling!</h3>  <!-- intro page. hides when clicked-->
   </div>
+  <button type="button" class="btn btn-delete" ng-click="deletePage(page)" ng-show="authorized">Delete</button>
 </div>
 
 

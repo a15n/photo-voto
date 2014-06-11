@@ -1,6 +1,14 @@
 'use strict';
 
 
+
+function sortByKey(array, key) {
+    return array.sort(function(a, b) {
+        var x = a[key]; var y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+}
+
 var hashtag = function (inputString) {
   return inputString.replace(/\W/g,'').split(" ").join("");
 };
@@ -31,8 +39,19 @@ function instaScrub (inputArray, title) {
 angular.module('photoVotoApp')
   .controller('MainCtrl', function ($scope, $http) {
 
+    function setScreenSize () {
+      var imageHeight = $('#imageRow').height();
+      var imageWidth = $('#imageRow').width()/2;
+      var imageHW = Math.min(imageHeight, imageWidth);
+      $('img').css({
+        'height': imageHW + 'px',
+        'width': imageHW + 'px'
+      });
+    }
+    setScreenSize();
+    $(window).resize(setScreenSize);
 
-
+    $scope.authorized = false;
 
 
     var pageIndex = 0;
@@ -50,25 +69,88 @@ angular.module('photoVotoApp')
       }
     };
 
-    $scope.vote = function (photo) {
+    $scope.vote = function (page, photoUrl) {
       $scope.viewed = true;
-      for (var i = 0; i < 4; i++) {
-        $scope.photoArray[i].views++;
-        if ($scope.photoArray[i]._id === photo._id) {
-          $scope.photoArray[i].votes++;
+      var i = 0;
+      var royals = 0;
+      for (i; i < 4; i++) {
+        page.photos.photoArray[i].views++;
+        if (page.photos.photoArray[i].url === photoUrl) {
+          page.photos.photoArray[i].votes++;
         }
-        $scope.photoArray[i].approval = $scope.photoArray[i].votes / $scope.photoArray[i].views * 100;
+        page.photos.photoArray[i].approval = page.photos.photoArray[i].votes / page.photos.photoArray[i].views * 100;
+        if (page.photos.photoArray[i].approval > 0) {
+          royals++;
+        }
+        page.photos.royalty = royals;
       }
-      $http.put('/api/v1/Photos/' + $scope.photos._id, $scope.photos)
-      .success(function(data){
-        console.log("put is successful!");
+      $http.get('/api/v1/Pages/')
+      .success(function(data) {
+        $scope.page = data[pageIndex];
+        pageIndex++;
       });
 
-    $scope.deletePage = function (name) {
-      console.log(name);
+
+
+setTimeout(function(){
+
+      sortByKey(page.photos.photoArray, "approval").reverse();
+
+
+      $http.jsonp('https://api.instagram.com/v1/tags/' + page.hashtag + '/media/recent?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32&callback=JSON_CALLBACK')
+      .success(function(data){
+        var instagramJsonp = data.data;
+        var k = page.photos.royalty;
+
+        for (k; k < 4; k++) {
+          var temp = {};
+          var uui = 0;
+          for (uui; uui <= 20; uui++) {
+            if (page.photos.photoArray[0].url === instagramJsonp[uui].images.standard_resolution.url || page.photos.photoArray[1].url === instagramJsonp[uui].images.standard_resolution.url || page.photos.photoArray[2].url === instagramJsonp[uui].images.standard_resolution.url || page.photos.photoArray[3].url === instagramJsonp[uui].images.standard_resolution.url) {
+
+                console.log('duplicate url match at ' + uui + '. url not assigned');
+
+            } else {
+              temp.url = instagramJsonp[uui].images.standard_resolution.url;
+              console.log('no duplicate url match at ' + uui + '. url ASSIGNED!');
+              uui = 20;
+            }
+          }
+          temp.votes = 0;
+          temp.views = 0;
+          page.photos.photoArray.splice(k ,1, temp);
+        }
+        $http.put('/api/v1/Pages/' + page._id, page)
+        .success(function(data) {
+          console.log("put ID page has been updated.");
+        });
+      });
+
+
+
+
+
+
+      // $http.get('/api/v1/Pages/')
+      // .success(function(data) {
+      //   $scope.page = data[pageIndex];
+      //   pageIndex++;
+      // });
+}, 3000);
     };
 
+    $scope.deletePage = function (object) {
+      console.log(object);
+      $http.delete('/api/v1/Pages/' + object._id);
+      $http.get('/api/v1/Pages/')
+      .success(function(data) {
+        $scope.page = data[pageIndex];
+        pageIndex++;
+      });
     };
+
+
+
   });
 
 //attach jquery event to window.resize
