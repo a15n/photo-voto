@@ -5,7 +5,6 @@ angular.module('photoVotoApp')
     $scope.user = {};
     $scope.errors = {};
 
-
     $scope.login = function(form) {
       $scope.submitted = true;
 
@@ -26,6 +25,7 @@ angular.module('photoVotoApp')
     };
 
     $scope.submitAttractions = function ($scope) {
+
       var url = $scope.url;
       var urls = [url.slice(27)];
       var kimonoUrl = "http://www.kimonolabs.com/api/43takhg6?apikey=0a1d375d04e46d6b8ff57584f2c1ddf9&kimpath1=";
@@ -122,6 +122,33 @@ angular.module('photoVotoApp')
         console.log("Pages DB deleted");
       });
     };
+
+
+
+    $http.get('/api/v1/Pages/')
+    .success(function(data) {
+      $scope.pages = data;
+    });
+
+    $scope.revisePage = function (page, tempObject){
+      if (!tempObject) {
+        console.log("input fields must be updated!")
+      } else {
+        page.hashtag = tempObject.hashtag;
+        $http.put('/api/v1/Pages/' + page._id, page)
+        .success(function (data) {
+          console.log(page.attraction + " updated")
+        });
+      }
+    }
+
+    $scope.deletePage = function(page) {
+      $http.delete('/api/v1/Pages/' + page._id)
+      .success(function(data) {
+        console.log(page.attraction + " deleted");
+      });
+    }
+
 
   });
 

@@ -104,7 +104,7 @@ ul li img {
 @font-face {
     font-family: Bira;
     src: url(../assets/fonts/bira/Bira_PERSONAL_USE_ONLY.ttf);
-    font-weight:400; /*weight TBD*/
+    font-weight:200; /*weight TBD*/
 }
 .bira {
   font-family: Bira, Helvetica, Arial, sans-serif;
@@ -137,13 +137,13 @@ html,body {
 }
 
 .photo-box {
-  background-color: #000000;
+
   height: 100%;
 
 }
 
 .text-box {
-  background-color: #222222;
+
   height: 100%;
 }
 
@@ -198,4 +198,29 @@ html,body {
 
 img:hover {
   cursor: url('http://www.snazzyspace.com/cursorsfolder/mickey-thumbs-up.png'), auto !important;
+}
+
+span:hover {
+  cursor: url('http://www.snazzyspace.com/cursorsfolder/mickey-thumbs-up.png'), auto !important;
+}
+
+
+#footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px;
+}
+
+#dashboard {
+  text-align: left;
+  th, tr, td{
+    border:1px solid white;
+    background-color: black;
+  }
+  input {
+    border:1px solid white;
+    background-color: #333;
+  }
+
 }

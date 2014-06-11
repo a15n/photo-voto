@@ -2,29 +2,29 @@
   <div class="height100 width100">
     <div class="row width100 height50 nmnp" id="imageRow">
       <div class="col-xs-6 height100 nmnp">
-        <img src="/../../assets/images/golden_gate_bridge.png" id="photo_1" ng-click="newPage()" ng-hide="viewed">
+        <img src="http://i1000.photobucket.com/albums/af125/sustainhaiti2/golden_gate_bridge.png" id="photo_1" ng-click="newPage()" ng-hide="viewed">
         <img ng-click="vote(page, photo.url)" ng-src="{{page.photos.photoArray[0].url}}" id="photo_1" ng-show="viewed">
       </div>
 
       <div class="col-xs-6 height100 nmnp">
-        <img src="/../../assets/images/big_ben.png" id="photo_2" ng-click="newPage()" ng-hide="viewed">
+        <img src="http://i1000.photobucket.com/albums/af125/sustainhaiti2/big_ben.png" id="photo_2" ng-click="newPage()" ng-hide="viewed">
         <img ng-click="vote(page, photo.url)" ng-src="{{page.photos.photoArray[1].url}}" id="photo_2" ng-show="viewed">
       </div>
     </div>
     <div class="row width100 height50 nmnp" id="imageRow">
       <div class="col-xs-6 height100 nmnp">
-        <img src="/../../assets/images/empire_state_building.png" id="photo_3" ng-click="newPage()" ng-hide="viewed">
+        <img src="http://i1000.photobucket.com/albums/af125/sustainhaiti2/empire_state_building.png" id="photo_3" ng-click="newPage()" ng-hide="viewed">
         <img ng-click="vote(page, photo.url)" ng-src="{{page.photos.photoArray[2].url}}" id="photo_3" ng-show="viewed">
       </div>
       <div class="col-xs-6 height100 nmnp">
-        <img src="/../../assets/images/hong_kong_skyline.png" id="photo_4" ng-click="newPage()" ng-hide="viewed">
+        <img src="http://i1000.photobucket.com/albums/af125/sustainhaiti2/hong_kong_skyline.png" id="photo_4" ng-click="newPage()" ng-hide="viewed">
         <img ng-click="vote(page, photo.url)" ng-src="{{page.photos.photoArray[3].url}}" id="photo_4" ng-show="viewed">
       </div>
     </div>
   </div>
 </div>
 
-<div class="col-sm-5 text-box text-align">
+<div class="col-sm-5 text-box text-align nmnp">
   <div>
     <br>
     <br>
@@ -39,13 +39,16 @@
     <h1 class="bira attraction">Voto</h1>
     <h2 class="bira">Crowd-curated photos of the best attractions in the most popular cities in the world</h2>
     <h3>Click on your favorite image to cast your vote</h3>
-    <h3>Each time you vote you'll show you a new attraction</h3>
+    <h3>Each time you vote we'll show you a new attraction</h3>
     <h3>The more votes the better the pictures become</h3>
-    <h3>Happy travelling!</h3>  <!-- intro page. hides when clicked-->
+    <h3>Happy travelling!</h3>
+  </div> <!-- intro page. hides when clicked-->
+
+  <div id="footer">
+      <h2>
+        <span class="glyphicon glyphicon-heart"></span>
+        <span class="glyphicon glyphicon-plane"></span>
+      </h2>
   </div>
-  <button type="button" class="btn btn-delete" ng-click="deletePage(page)" ng-show="authorized">Delete</button>
+
 </div>
-
-
-
-<!-- Voto: Crowd-curated photos of the best attractions in the most popular cities in the world -->

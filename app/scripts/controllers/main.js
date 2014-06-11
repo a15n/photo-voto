@@ -43,7 +43,7 @@ angular.module('photoVotoApp')
       var imageHeight = $('#imageRow').height();
       var imageWidth = $('#imageRow').width()/2;
       var imageHW = Math.min(imageHeight, imageWidth);
-      $('img').css({
+      $('#imageRow img').css({
         'height': imageHW + 'px',
         'width': imageHW + 'px'
       });
@@ -79,10 +79,13 @@ angular.module('photoVotoApp')
           page.photos.photoArray[i].votes++;
         }
         page.photos.photoArray[i].approval = page.photos.photoArray[i].votes / page.photos.photoArray[i].views * 100;
+
+        //this needs to be moved somewhere else....
         if (page.photos.photoArray[i].approval > 0) {
           royals++;
         }
         page.photos.royalty = royals;
+
       }
       $http.get('/api/v1/Pages/')
       .success(function(data) {
@@ -92,7 +95,7 @@ angular.module('photoVotoApp')
 
 
 
-setTimeout(function(){
+      setTimeout(function(){
 
       sortByKey(page.photos.photoArray, "approval").reverse();
 
@@ -108,11 +111,11 @@ setTimeout(function(){
           for (uui; uui <= 20; uui++) {
             if (page.photos.photoArray[0].url === instagramJsonp[uui].images.standard_resolution.url || page.photos.photoArray[1].url === instagramJsonp[uui].images.standard_resolution.url || page.photos.photoArray[2].url === instagramJsonp[uui].images.standard_resolution.url || page.photos.photoArray[3].url === instagramJsonp[uui].images.standard_resolution.url) {
 
-                console.log('duplicate url match at ' + uui + '. url not assigned');
+                // console.log('duplicate url match at ' + uui + '. url not assigned');
 
             } else {
               temp.url = instagramJsonp[uui].images.standard_resolution.url;
-              console.log('no duplicate url match at ' + uui + '. url ASSIGNED!');
+              // console.log('no duplicate url match at ' + uui + '. url ASSIGNED!');
               uui = 20;
             }
           }
@@ -136,7 +139,7 @@ setTimeout(function(){
       //   $scope.page = data[pageIndex];
       //   pageIndex++;
       // });
-}, 3000);
+      }, 3000);
     };
 
     $scope.deletePage = function (object) {
