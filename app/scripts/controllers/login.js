@@ -1,5 +1,7 @@
 'use strict';
 
+var attractionsPerPage = 1; // k < #: # === attractions per page
+
 angular.module('photoVotoApp')
   .controller('LoginCtrl', function ($scope, $http, Auth, $location) {
     $scope.user = {};
@@ -25,21 +27,72 @@ angular.module('photoVotoApp')
     };
 
     $scope.submitAttractions = function ($scope) {
-
+      //locally saves the form variables
       var url = $scope.url;
-      var urls = [url.slice(27)];
-      var kimonoUrl = "http://www.kimonolabs.com/api/43takhg6?apikey=0a1d375d04e46d6b8ff57584f2c1ddf9&kimpath1=";
       var pages = $scope.pages;
+      //2 resets the page inputs
       $scope.url = "";
       $scope.pages = "";
-      var populatePhotosWithObject = function (hashtag, originalObject) {
+
+      var kimonoUrls = function (inputUrl, numUrls) {
+        var kimonoUrl = "http://www.kimonolabs.com/api/43takhg6?apikey=0a1d375d04e46d6b8ff57584f2c1ddf9&kimpath1=";
+        var outputUrls = [kimonoUrl + inputUrl.slice(27)];
+        var urlLeft = inputUrl.slice(27,57);
+        var urlRight = inputUrl.slice(57);
+        var urlMiddleNum = 30;
+        var i = 1;
+        if (numUrls > 1) {
+          for (i; i < numUrls; i++) {
+            var urlMiddle = 'oa' + urlMiddleNum + '-';
+            outputUrls.push(kimonoUrl + urlLeft + urlMiddle + urlRight);
+            urlMiddleNum += 30;
+          }
+        }
+        return outputUrls;
+      }; //creates URLs to scrape multiple pages on Trip Advisor
+
+
+      var kimonoApi = function (getUrl) {
+        $http.get(getUrl)
+          .success(function(data){
+            var k = 0;
+            for (k; k < attractionsPerPage; k++) { //this is on line 3
+              var page = {};
+              var stringLimit = 125; //safe at 123
+              var thisCollection = data.results.collection1[k];
+              page.city = data.results.collection2[0].city.slice(16);
+              page.attraction = thisCollection.attraction.text.replace(/[&-().]/g, '');
+              page.hashtag = page.attraction.replace(/\W/g,'').split(" ").join("");
+              page.url = thisCollection.attraction.href;
+              page.rating = thisCollection.rating.alt;
+              page.ratingNumber = parseInt(page.rating);
+              if (thisCollection.review1.text !== undefined) {
+                page.review1 = "\"" + thisCollection.review1.text + "\"";
+              }
+              if (thisCollection.review2.text !== undefined) {
+                page.review2 = "\"" + thisCollection.review2.text + "\"";
+              }
+              if (typeof thisCollection.description !== "string" && typeof thisCollection.description[1] === "string") {
+                if (thisCollection.description[1].substring(0,5) === "Owner") {
+                  page.description = thisCollection.description[1].slice(19).slice(0,stringLimit);
+                } else {
+                  page.description = thisCollection.description[1].slice(0,stringLimit);
+                }
+              } else if (typeof thisCollection.description !== "string" && typeof thisCollection.description[1] === "object") {
+                page.description = thisCollection.description[1].text.slice(0,stringLimit);
+              } //page.description if/ else if statement
+              instagramApi(page); //passed object to 2nd API callback
+            }
+          });
+      }; //pulls data from kimono API
+
+      var instagramApi = function (originalObject) {
         var page = originalObject;
         page.photos = {};
 
         page.photos.royalty = 0;
-        page.photos.nonRoyalty = 4;
         page.photos.photoArray = [];
-        $http.jsonp('https://api.instagram.com/v1/tags/' + hashtag + '/media/recent?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32&callback=JSON_CALLBACK')
+        $http.jsonp('https://api.instagram.com/v1/tags/' + page.hashtag + '/media/recent?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32&callback=JSON_CALLBACK')
         .success(function(data){
           var instagramJsonp = data.data;
           var m = 0;
@@ -50,70 +103,15 @@ angular.module('photoVotoApp')
             page.photos.photoArray[m].views = 0;
           }
           console.log(page.attraction + " " + page.city + " added!!!");
-          postToDatabase(page);
+          $http.post('/api/v1/Pages/', page);
         });
-      };
+      }; //pulls data from instagram API and pushes to mongoDB
 
-      var andrewApi = function (getUrl) {
-        $http.get(getUrl)
-          .success(function(data){
-            var k = 0;
-            for (k; k < 30; k++) {                    // k < #: # === attractions per page
-              var page = {};
-              var stringLimit = 123;
-              var testMe = data.results;
-
-              page.city = data.results.collection2[0].city.slice(16);
-              page.attraction = data.results.collection1[k].attraction.text.replace(/[&-().]/g, '');
-              page.hashtag = page.attraction.replace(/\W/g,'').split(" ").join("");
-
-              page.url = data.results.collection1[k].attraction.href;
-              page.rating = data.results.collection1[k].rating.alt;
-              page.ratingNumber = parseInt(data.results.collection1[k].rating.alt);
-              if (data.results.collection1[k].review1.text !== undefined) {
-                page.review1 = "\"" + data.results.collection1[k].review1.text + "\"";
-              }
-              if (data.results.collection1[k].review2.text !== undefined) {
-                page.review2 = "\"" + data.results.collection1[k].review2.text + "\"";
-              }
-              if (typeof data.results.collection1[k].description !== "string" && typeof data.results.collection1[k].description[1] === "string") { //is a string
-                if (data.results.collection1[k].description[1].substring(0,5) === "Owner") {
-                  page.description = data.results.collection1[k].description[1].slice(19).slice(0,stringLimit);
-                } else {
-                  page.description = data.results.collection1[k].description[1].slice(0,stringLimit);
-                }
-              } else if (typeof data.results.collection1[k].description !== "string" && typeof data.results.collection1[k].description[1] === "object") {
-                page.description = data.results.collection1[k].description[1].text.slice(0,stringLimit);
-              } //page.description if/ else if statement
-              populatePhotosWithObject(page.hashtag, page); //passed object to 2ns API callback
-
-
-            }
-          });
-        };
-
-      var postToDatabase = function (page) {
-        $http.post('/api/v1/Pages/', page);
-      };
-
-
-      if (pages > 1) {
-        var i = 1;
-        var urlLeft = url.slice(27,57);
-        var urlRight = url.slice(57);
-        var urlMiddleNum = 30;
-        for (i; i < pages; i++) {
-          var urlMiddle = 'oa' + urlMiddleNum.toString() + '-';
-          urls.push(urlLeft + urlMiddle + urlRight);
-          urlMiddleNum = urlMiddleNum + 30;
-        }
-      } //creates URLs to scrape multiple pages on Trip Advisor
-
-      for (var j = 0; j < pages; j++) {
-        var masterUrl = kimonoUrl + urls[j];
-        andrewApi(masterUrl);   //Andrew API called here pages.length times
-
-      }
+      var urls = kimonoUrls (url, pages);
+      var j = 0;
+      for (j; j < pages; j++) {
+        kimonoApi(urls[j]);
+      } //kimonoApi called here pages times
     };
 
     $scope.clearEverything = function ($scope) {
@@ -123,36 +121,26 @@ angular.module('photoVotoApp')
       });
     };
 
-
-
-    $http.get('/api/v1/Pages/')
-    .success(function(data) {
+    $http.get('/api/v1/Pages/').success(function(data) {
       $scope.pages = data;
-    });
+    }); //bring page to the login page
 
     $scope.revisePage = function (page, tempObject){
       if (!tempObject) {
-        console.log("input fields must be updated!")
+        console.log("grey input fields must be included!");
       } else {
         page.hashtag = tempObject.hashtag;
         $http.put('/api/v1/Pages/' + page._id, page)
         .success(function (data) {
-          console.log(page.attraction + " updated")
+          console.log(page.attraction + " updated");
         });
       }
-    }
+    };
 
     $scope.deletePage = function(page) {
       $http.delete('/api/v1/Pages/' + page._id)
       .success(function(data) {
         console.log(page.attraction + " deleted");
       });
-    }
-
-
+    };
   });
-
-
-
-//https://api.instagram.com/v1/tags/search?q=goldengate&access_token=418954256.f59def8.2ecd8c03f3d14d2aaa3ed5da8cf10789
-//https://api.instagram.com/v1/tags/search?q=goldengatebridge&access_token=418954256.f59def8.2ecd8c03f3d14d2aaa3ed5da8cf10789

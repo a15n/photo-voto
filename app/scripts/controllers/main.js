@@ -1,7 +1,5 @@
 'use strict';
 
-
-
 function sortByKey(array, key) {
     return array.sort(function(a, b) {
         var x = a[key]; var y = b[key];
@@ -9,36 +7,10 @@ function sortByKey(array, key) {
     });
 }
 
-var hashtag = function (inputString) {
-  return inputString.replace(/\W/g,'').split(" ").join("");
-};
-
-var instaUrl = function (tag) {
-  //https://api.instagram.com/v1/tags/marinheadlands/media/recent?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32&callback=JSON_CALLBACK
-  return 'https://api.instagram.com/v1/tags/' + tag + '/media/recent?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32&callback=JSON_CALLBACK';
-};
-
-function instaScrub (inputArray, title) {
-  var outputArray = [];
-  var i = 0, j = 0, inputArrayLength = inputArray.length;
-  for (i; i < inputArrayLength; i++) {
-    if (inputArray[i].users_in_photo.length === 0) {
-      outputArray[j] = {};
-      outputArray[j].title = title;
-      outputArray[j].url = inputArray[i].images.standard_resolution.url;
-      outputArray[j].votes = 0;
-      outputArray[j].views = 0;
-      outputArray[j].approval = undefined;
-      outputArray[j].rank = undefined;
-      j++;
-    }
-  }
-  return outputArray;
-}
-
 angular.module('photoVotoApp')
   .controller('MainCtrl', function ($scope, $http) {
 
+    //function that dynamically sizes the photo box
     function setScreenSize () {
       var imageHeight = $('#imageRow').height();
       var imageWidth = $('#imageRow').width()/2;
@@ -51,111 +23,79 @@ angular.module('photoVotoApp')
     setScreenSize();
     $(window).resize(setScreenSize);
 
-    $scope.authorized = false;
-
-
     var pageIndex = 0;
 
+    //used on the first page only
     $scope.newPage = function (city) {
       $scope.viewed = true;
-      if (city) {
-        //return results with city filtering
-      } else {
-        $http.get('/api/v1/Pages/')
-        .success(function(data) {
-          $scope.page = data[pageIndex];
-          pageIndex++;
-        });
-      }
+      $http.get('/api/v1/Pages/')
+      .success(function(data) {
+        $scope.page = data[pageIndex];
+        pageIndex++;
+      });
     };
 
-    $scope.vote = function (page, photoUrl) {
-      $scope.viewed = true;
-      var i = 0;
-      var royals = 0;
-      for (i; i < 4; i++) {
-        page.photos.photoArray[i].views++;
-        if (page.photos.photoArray[i].url === photoUrl) {
-          page.photos.photoArray[i].votes++;
-        }
-        page.photos.photoArray[i].approval = page.photos.photoArray[i].votes / page.photos.photoArray[i].views * 100;
+    $scope.vote = function (page, photoId) {
 
-        //this needs to be moved somewhere else....
-        if (page.photos.photoArray[i].approval > 0) {
+      var i = 0;
+      var royals = 0; //resets royal count to 0 before it repopulates it
+      for (i; i < 4; i++) { //cycles through the 4 photos (index 0-3)
+        var photo = page.photos.photoArray[i];
+        photo.views++; //every photo has been viewed now
+        if (photo._id === photoId) {
+
+          photo.votes++;
+        } //only the clicked photo receives a vote
+        photo.approval = Math.round(photo.votes / photo.views * 100); // (0-100) every photo gets an approval rating
+
+        if (photo.approval > 0) {
           royals++;
         }
-        page.photos.royalty = royals;
-
       }
+      page.photos.royalty = royals;
       $http.get('/api/v1/Pages/')
       .success(function(data) {
         $scope.page = data[pageIndex];
         pageIndex++;
       });
 
-
-
       setTimeout(function(){
 
       sortByKey(page.photos.photoArray, "approval").reverse();
 
-
       $http.jsonp('https://api.instagram.com/v1/tags/' + page.hashtag + '/media/recent?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32&callback=JSON_CALLBACK')
       .success(function(data){
         var instagramJsonp = data.data;
-        var k = page.photos.royalty;
-
+        if (page.photos.royalty === 4) {
+          var k = 3;
+        } else {
+          var k = page.photos.royalty;
+        }
         for (k; k < 4; k++) {
-          var temp = {};
+          var tempObject = {};
           var uui = 0;
           for (uui; uui <= 20; uui++) {
-            if (page.photos.photoArray[0].url === instagramJsonp[uui].images.standard_resolution.url || page.photos.photoArray[1].url === instagramJsonp[uui].images.standard_resolution.url || page.photos.photoArray[2].url === instagramJsonp[uui].images.standard_resolution.url || page.photos.photoArray[3].url === instagramJsonp[uui].images.standard_resolution.url) {
-
+            var photoArray = page.photos.photoArray;
+            var instagramPhotoUrl = instagramJsonp[uui].images.standard_resolution.url;
+            if (photoArray[0].url === instagramPhotoUrl || photoArray[1].url === instagramPhotoUrl || photoArray[2].url === instagramPhotoUrl || photoArray[3].url === instagramPhotoUrl) {
                 // console.log('duplicate url match at ' + uui + '. url not assigned');
-
+                // uui for-loop continues
             } else {
-              temp.url = instagramJsonp[uui].images.standard_resolution.url;
+              tempObject.url = instagramPhotoUrl;
               // console.log('no duplicate url match at ' + uui + '. url ASSIGNED!');
-              uui = 20;
+              uui = 20; //use this to jump out of the loop
             }
           }
-          temp.votes = 0;
-          temp.views = 0;
-          page.photos.photoArray.splice(k ,1, temp);
+          tempObject.votes = 0;
+          tempObject.views = 0;
+          page.photos.photoArray.splice(k ,1, tempObject);
         }
         $http.put('/api/v1/Pages/' + page._id, page)
         .success(function(data) {
           console.log("put ID page has been updated.");
         });
       });
-
-
-
-
-
-
-      // $http.get('/api/v1/Pages/')
-      // .success(function(data) {
-      //   $scope.page = data[pageIndex];
-      //   pageIndex++;
-      // });
-      }, 3000);
+      }, 2000);
     };
-
-    $scope.deletePage = function (object) {
-      console.log(object);
-      $http.delete('/api/v1/Pages/' + object._id);
-      $http.get('/api/v1/Pages/')
-      .success(function(data) {
-        $scope.page = data[pageIndex];
-        pageIndex++;
-      });
-    };
-
-
 
   });
-
-//attach jquery event to window.resize
-//SO dynamically resize div based on size of browser window
-//emilolsson.com/shop/demo/l

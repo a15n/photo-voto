@@ -17,5 +17,6 @@
   "trailing": true,
   "globals": {
     "angular": false
+    "$":false
   }
 }

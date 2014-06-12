@@ -3,22 +3,22 @@
     <div class="row width100 height50 nmnp" id="imageRow">
       <div class="col-xs-6 height100 nmnp">
         <img src="http://i1000.photobucket.com/albums/af125/sustainhaiti2/golden_gate_bridge.png" id="photo_1" ng-click="newPage()" ng-hide="viewed">
-        <img ng-click="vote(page, photo.url)" ng-src="{{page.photos.photoArray[0].url}}" id="photo_1" ng-show="viewed">
+        <img ng-click="vote(page, page.photos.photoArray[0]._id)" ng-src="{{page.photos.photoArray[0].url}}" id="photo_1" ng-show="viewed">
       </div>
 
       <div class="col-xs-6 height100 nmnp">
         <img src="http://i1000.photobucket.com/albums/af125/sustainhaiti2/big_ben.png" id="photo_2" ng-click="newPage()" ng-hide="viewed">
-        <img ng-click="vote(page, photo.url)" ng-src="{{page.photos.photoArray[1].url}}" id="photo_2" ng-show="viewed">
+        <img ng-click="vote(page, page.photos.photoArray[1]._id)" ng-src="{{page.photos.photoArray[1].url}}" id="photo_2" ng-show="viewed">
       </div>
     </div>
     <div class="row width100 height50 nmnp" id="imageRow">
       <div class="col-xs-6 height100 nmnp">
         <img src="http://i1000.photobucket.com/albums/af125/sustainhaiti2/empire_state_building.png" id="photo_3" ng-click="newPage()" ng-hide="viewed">
-        <img ng-click="vote(page, photo.url)" ng-src="{{page.photos.photoArray[2].url}}" id="photo_3" ng-show="viewed">
+        <img ng-click="vote(page, page.photos.photoArray[2]._id)" ng-src="{{page.photos.photoArray[2].url}}" id="photo_3" ng-show="viewed">
       </div>
       <div class="col-xs-6 height100 nmnp">
         <img src="http://i1000.photobucket.com/albums/af125/sustainhaiti2/hong_kong_skyline.png" id="photo_4" ng-click="newPage()" ng-hide="viewed">
-        <img ng-click="vote(page, photo.url)" ng-src="{{page.photos.photoArray[3].url}}" id="photo_4" ng-show="viewed">
+        <img ng-click="vote(page, page.photos.photoArray[3]._id)" ng-src="{{page.photos.photoArray[3].url}}" id="photo_4" ng-show="viewed">
       </div>
     </div>
   </div>
