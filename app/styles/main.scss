@@ -132,19 +132,7 @@ html,body {
 }
 
 .whole-box {
-  height: 100%;
   text-align: center;
-}
-
-.photo-box {
-
-  height: 100%;
-
-}
-
-.text-box {
-
-  height: 100%;
 }
 
 .height50 {
@@ -155,7 +143,7 @@ html,body {
   height:100%;
 }
 
-.wdith50 {
+.width50 {
   width:50%;
 }
 
@@ -166,9 +154,7 @@ html,body {
 .nmnp {
   margin: 0 auto;
   padding: 0;
-
 }
-
 
 #photo_1 {
     position: absolute;
@@ -196,11 +182,11 @@ html,body {
 
 
 
-img:hover {
+#imageRow img:hover {
   cursor: url('http://www.snazzyspace.com/cursorsfolder/mickey-thumbs-up.png'), auto !important;
 }
 
-span:hover {
+td>span:hover {
   cursor: url('http://www.snazzyspace.com/cursorsfolder/mickey-thumbs-up.png'), auto !important;
 }
 
@@ -208,8 +194,17 @@ span:hover {
 #footer {
   position: absolute;
   bottom: 0;
+  left: 0px;
   width: 100%;
   height: 60px;
+  text-align: center;
+}
+
+#footer-info {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 70px;
 }
 
 #dashboard {
@@ -222,5 +217,61 @@ span:hover {
     border:1px solid white;
     background-color: #333;
   }
+}
 
+.link {
+  color:white;
+  text-decoration: none;
+  background-color: none;
+}
+
+
+.pacifico_l {
+  font-family: 'Pacifico', cursive;
+  font-size: 80px;
+}
+
+.pacifico_m {
+  font-family: 'Pacifico', cursive;
+  font-size: 65px;
+}
+
+.pacifico_s {
+  font-family: 'Pacifico', cursive;
+  font-size: 50px;
+}
+
+.nixie_l {
+  font-family: 'Nixie One', cursive;
+  font-size: 34px;
+
+}
+
+.nixie_m {
+  font-family: 'Nixie One', cursive;
+  font-size: 24px;
+}
+
+.nixie_s {
+  font-family: 'Nixie One', cursive;
+  font-size: 12px;
+}
+
+.grow {
+  display: inline-block;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: -webkit-transform;
+  transition-property: transform;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+}
+
+.grow:hover {
+  -webkit-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
 }

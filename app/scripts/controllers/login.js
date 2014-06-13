@@ -1,6 +1,6 @@
 'use strict';
 
-var attractionsPerPage = 1; // k < #: # === attractions per page
+var attractionsPerPage = 30; // k < #: # === attractions per page
 
 angular.module('photoVotoApp')
   .controller('LoginCtrl', function ($scope, $http, Auth, $location) {
@@ -53,6 +53,32 @@ angular.module('photoVotoApp')
 
 
       var kimonoApi = function (getUrl) {
+        var numToStars = function (num) {
+          var numArray = [];
+          if (num % 1 === 0) {  //whole number
+            var i = 0;
+            var x = num;
+            for (i; i < x; i++) {
+                numArray.push(i + 1);
+            }
+          } else { //float number
+            var j = 0;
+            var y = num - 0.5;
+            for (j; j < y; j++) {
+                numArray.push(j + 1);
+            }
+            numArray.push(0.5);
+          }
+          if (numArray.length < 5) {
+            var k = 5 - numArray.length;
+            // var dummyArray = [11,12,13,14,15];
+            while(k--) {
+                numArray.push(undefined);
+            }
+          }
+          return numArray;
+        };
+
         $http.get(getUrl)
           .success(function(data){
             var k = 0;
@@ -61,11 +87,14 @@ angular.module('photoVotoApp')
               var stringLimit = 125; //safe at 123
               var thisCollection = data.results.collection1[k];
               page.city = data.results.collection2[0].city.slice(16);
+              page.airbnbUrl = "https://www.airbnb.com/s/" + page.city.split(" ").join("_");
               page.attraction = thisCollection.attraction.text.replace(/[&-().]/g, '');
               page.hashtag = page.attraction.replace(/\W/g,'').split(" ").join("");
-              page.url = thisCollection.attraction.href;
+              page.tripAdvisorUrl = thisCollection.attraction.href;
               page.rating = thisCollection.rating.alt;
-              page.ratingNumber = parseInt(page.rating);
+              page.ratingNumber = parseFloat(page.rating);
+              page.ratingStars = numToStars(page.ratingNumber);
+              page.numReviews = thisCollection.numReviews.text;
               if (thisCollection.review1.text !== undefined) {
                 page.review1 = "\"" + thisCollection.review1.text + "\"";
               }
@@ -126,21 +155,27 @@ angular.module('photoVotoApp')
     }); //bring page to the login page
 
     $scope.revisePage = function (page, tempObject){
-      if (!tempObject) {
-        console.log("grey input fields must be included!");
-      } else {
-        page.hashtag = tempObject.hashtag;
-        $http.put('/api/v1/Pages/' + page._id, page)
-        .success(function (data) {
-          console.log(page.attraction + " updated");
-        });
-      }
+      setTimeout(function () {
+        if (!tempObject) {
+          console.log("grey input fields must be included!");
+        } else {
+          page.hashtag = tempObject.hashtag;
+          $http.put('/api/v1/Pages/' + page._id, page)
+          .success(function (data) {
+            console.log(page.attraction + " updated");
+          });
+        }
+      }, 5000);
+
+
     };
 
     $scope.deletePage = function(page) {
-      $http.delete('/api/v1/Pages/' + page._id)
-      .success(function(data) {
-        console.log(page.attraction + " deleted");
-      });
+      setTimeout(function () {
+        $http.delete('/api/v1/Pages/' + page._id)
+        .success(function(data) {
+          console.log(page.attraction + " deleted");
+        });
+      }, 5000);
     };
   });
