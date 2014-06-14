@@ -2,6 +2,13 @@
 
 var attractionsPerPage = 30; // k < #: # === attractions per page
 
+function sortByKey(array, key) {
+  return array.sort(function(a, b) {
+    var x = a[key]; var y = b[key];
+    return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+  });
+}
+
 angular.module('photoVotoApp')
   .controller('LoginCtrl', function ($scope, $http, Auth, $location) {
     $scope.user = {};
@@ -17,7 +24,8 @@ angular.module('photoVotoApp')
         })
         .then( function() {
           // Logged in, redirect to settings page
-          $location.path('/settings');
+          // $location.path('/settings');
+          $scope.loggedIn = true;
         })
         .catch( function(err) {
           err = err.data;
@@ -86,6 +94,8 @@ angular.module('photoVotoApp')
               var page = {};
               var stringLimit = 125; //safe at 123
               var thisCollection = data.results.collection1[k];
+              page.views = 0;
+              page.randomNumber = Math.random();
               page.city = data.results.collection2[0].city.slice(16);
               page.airbnbUrl = "https://www.airbnb.com/s/" + page.city.split(" ").join("_");
               page.attraction = thisCollection.attraction.text.replace(/[&-().]/g, '');
@@ -150,10 +160,6 @@ angular.module('photoVotoApp')
       });
     };
 
-    $http.get('/api/v1/Pages/').success(function(data) {
-      $scope.pages = data;
-    }); //bring page to the login page
-
     $scope.revisePage = function (page, tempObject){
       setTimeout(function () {
         if (!tempObject) {
@@ -166,8 +172,6 @@ angular.module('photoVotoApp')
           });
         }
       }, 5000);
-
-
     };
 
     $scope.deletePage = function(page) {
@@ -178,4 +182,40 @@ angular.module('photoVotoApp')
         });
       }, 5000);
     };
+
+//     $scope.randomize = function() {
+//       // var randomNumber = Math.random();
+//       // console.log(randomNumber);
+//       // $http.get('/api/v1/Pages?query="randomNumber":{$lte:' + randomNumber + "}")
+//       // .success(function(data){
+//       //   if (data == null) {
+//       //     console.log("nothing found");
+//       //   }
+//       //   console.log(data[0].attraction);
+//       // });
+
+// // > result = db.docs.findOne( { key : 2, random : { $gte : rand } } )
+// // > if ( result == null ) {
+// // >   result = db.docs.findOne( { key : 2, random : { $lte : rand } } )
+// // > }
+
+//     }
+
+
+
+
+    //http://localhost/api/v1/Customers?query={"field":">=value", "field":[value1,value2]
+
+
+      // $http.delete('/api/v1/Pages/')
+      // .success(function(data){
+      //   console.log("Pages DB deleted");
+      // });
+
+    //bring page to the login page
+    $http.get('/api/v1/Pages/')
+      .success(function(data) {
+        $scope.pages = data;
+      });
+
   });

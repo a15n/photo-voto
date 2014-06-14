@@ -3,22 +3,24 @@
     <div class="row width100 height50 nmnp" id="imageRow">
       <div class="col-xs-6 height100 nmnp">
         <img src="http://i1000.photobucket.com/albums/af125/sustainhaiti2/golden_gate_bridge.png" id="photo_1" ng-click="newPage()" ng-hide="viewed">
-        <img ng-click="vote(page, page.photos.photoArray[0]._id)" ng-src="{{page.photos.photoArray[0].url}}" id="photo_1" ng-show="viewed">
+        <!-- <img ng-click="vote(page, page.photos.photoArray[0]._id, city)" ng-src="{{page.photos.photoArray[0].url}}" id="photo_1" ng-show="viewed"> -->
+        <img ng-click="newPage(city); vote(page, page.photos.photoArray[0]._id)" ng-src="{{page.photos.photoArray[0].url}}" id="photo_1" ng-show="viewed">
+
       </div>
 
       <div class="col-xs-6 height100 nmnp">
         <img src="http://i1000.photobucket.com/albums/af125/sustainhaiti2/big_ben.png" id="photo_2" ng-click="newPage()" ng-hide="viewed">
-        <img ng-click="vote(page, page.photos.photoArray[1]._id)" ng-src="{{page.photos.photoArray[1].url}}" id="photo_2" ng-show="viewed">
+        <img ng-click="newPage(city); vote(page, page.photos.photoArray[1]._id)" ng-src="{{page.photos.photoArray[1].url}}" id="photo_2" ng-show="viewed">
       </div>
     </div>
     <div class="row width100 height50 nmnp" id="imageRow">
       <div class="col-xs-6 height100 nmnp">
         <img src="http://i1000.photobucket.com/albums/af125/sustainhaiti2/empire_state_building.png" id="photo_3" ng-click="newPage()" ng-hide="viewed">
-        <img ng-click="vote(page, page.photos.photoArray[2]._id)" ng-src="{{page.photos.photoArray[2].url}}" id="photo_3" ng-show="viewed">
+        <img ng-click="newPage(city); vote(page, page.photos.photoArray[2]._id)" ng-src="{{page.photos.photoArray[2].url}}" id="photo_3" ng-show="viewed">
       </div>
       <div class="col-xs-6 height100 nmnp">
         <img src="http://i1000.photobucket.com/albums/af125/sustainhaiti2/hong_kong_skyline.png" id="photo_4" ng-click="newPage()" ng-hide="viewed">
-        <img ng-click="vote(page, page.photos.photoArray[3]._id)" ng-src="{{page.photos.photoArray[3].url}}" id="photo_4" ng-show="viewed">
+        <img ng-click="newPage(city); vote(page, page.photos.photoArray[3]._id)" ng-src="{{page.photos.photoArray[3].url}}" id="photo_4" ng-show="viewed">
       </div>
     </div>
   </div>
@@ -29,11 +31,13 @@
     <br>
     <h1 class="pacifico_m">{{page.attraction}}</h1>
     <h2 class="pacifico_s">{{page.city}}</h2>
+
     <h2 style="display:inline-block" ng-repeat="star in page.ratingStars" > <!-- ng-show="viewed" -->
       <span style="color:white" class="fa fa-star" ng-show="star % 1 === 0"></span>
       <span style="color:white" class="fa fa-star-half-o" ng-show="star == 0.5"></span>
       <span style="color:white" class="fa fa-star-half-o" ng-show="star === undefined"></span>
     </h2>
+
     <h3 class="nixie_m">{{page.numReviews}}</h3>
     <h3 class="nixie_m">{{page.review1}}</h3>
     <h3 class="nixie_m">{{page.review2}}</h3>
@@ -46,21 +50,46 @@
     <h3 class="nixie_l">Click on your favorite image to cast a vote and see another attraction.</h3>
   </div> <!-- intro page. hides when clicked-->
 
+  <!-- <h1 class="pacifico_m" ng-show="page.attraction === undefined && viewed">No more pictures. Click on the browse icon below to start searching again</h1> -->
 
-
-  <div id="footer">
+  <div id="footer" class="nixie_m">
     <h3 id="footer-info">
-      <p class="nixie_m" ng-show="moreInfo">more info</p>
-      <p class="nixie_m" ng-show="travelHere">travel here</p>
-      <p class="nixie_m" ng-show="browse">browse</p>
-      <p class="nixie_m" ng-show="about">about</p>
-    </h3>
-    <h2>
-      <a target="_blank" href="{{page.tripAdvisorUrl}}" ng-mouseenter="moreInfo=true" ng-mouseleave="moreInfo=false" ng-show="viewed"><span target="_blank" class="fa fa-globe link grow"></span></a>
-      <a target="_blank" href="{{page.airbnbUrl}}" ng-mouseenter="travelHere=true" ng-mouseleave="travelHere=false" ng-show="viewed"><span target="_blank" class="fa fa-plane link grow"></span></a>
-      <a target="_blank" href="" ng-mouseenter="browse=true" ng-mouseleave="browse=false"  target="_blank"><span target="_blank" class="fa fa-list link grow"></span></a>
-      <a target="_blank" href="" ng-mouseenter="about=true" ng-mouseleave="about=false"  target="_blank"><span target="_blank" class="fa fa-cog link grow"></span></a>
-    </h2>
-  </div>
+      <p ng-show="moreInfo">more info</p>
+      <p ng-show="travelHere">travel here</p>
+      <p ng-show="browse">browse</p>
+      <p ng-show="about">about</p>
+      <div ng-show="aboutModal" class="col-xs-12" id="footer-modal" ng-mouseleave="aboutModal=false; about=false">
+        <p>Built by <a target="_blank" href="https://www.linkedin.com/in/scheuermann">Andrew Scheuermann</a> using the MEAN stack</p>
+        <hr>
+        <p>Designed by <a target="_blank"href="http://sadiewills.wix.com/sadiewilliams">Sadie Williams</a></p>
+        <hr>
+        <p>Contact at
+          <a href="mailto:andrewscheuermann@gmail.com">andrewscheuermann@gmail.com</a>
+        </p>
+      </div>
 
+    <form>
+      <div ng-show="browseModal" class="col-xs-12" id="footer-modal" ng-mouseleave="browseModal=false; browse=false">
+        <div class="form-group">
+          <p>Browse by...</p>
+          <div ng-repeat="city in cities">
+            <label class="radio-inline">
+              <input type="radio" name="city" ng-click="changeCity(city)" ng-checked="$first"> {{city}}
+            </label>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    </h3>
+    <h3 ng-show="viewed">
+      <a target="_blank" href="{{page.tripAdvisorUrl}}" ng-mouseenter="moreInfo=true" ng-mouseleave="moreInfo=false" ><span target="_blank" class="fa fa-globe link grow"></span></a>
+
+      <a target="_blank" href="{{page.airbnbUrl}}" ng-mouseenter="travelHere=true" ng-mouseleave="travelHere=false" ><span target="_blank" class="fa fa-plane link grow"></span></a>
+
+      <a target="_blank" href="" ng-mouseenter="browse=true" ng-mouseleave="browse=false"  target="_blank" ng-click="browse=!browse; browseModal=!browseModal; aboutModal=false"><span target="_blank" class="fa fa-list link grow"></span></a>
+
+      <a target="_blank" href="" ng-mouseenter="about=true" ng-mouseleave="about=false"  target="_blank" ng-click="about=!about; aboutModal=!aboutModal; browseModal=false"><span target="_blank" class="fa fa-cog link grow"></span></a>
+    </h3>
+  </div>
 </div>

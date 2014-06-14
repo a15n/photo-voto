@@ -207,6 +207,18 @@ td>span:hover {
   height: 70px;
 }
 
+#footer-modal {
+  border: white solid 5px;
+  border-radius: 10px;
+  background-color: black;
+  position: absolute;
+  bottom: 45px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+
+
 #dashboard {
   text-align: left;
   th, tr, td{
@@ -271,7 +283,7 @@ td>span:hover {
 }
 
 .grow:hover {
-  -webkit-transform: scale(1.1);
-  -ms-transform: scale(1.1);
-  transform: scale(1.1);
+  -webkit-transform: scale(1.2);
+  -ms-transform: scale(1.2);
+  transform: scale(1.2);
 }
