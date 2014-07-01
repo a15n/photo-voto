@@ -3,7 +3,6 @@
     <div class="row width100 height50 nmnp" id="imageRow">
       <div class="col-xs-6 height100 nmnp">
         <img src="http://i1000.photobucket.com/albums/af125/sustainhaiti2/golden_gate_bridge.png" id="photo_1" ng-click="newPage()" ng-hide="viewed">
-        <!-- <img ng-click="vote(page, page.photos.photoArray[0]._id, city)" ng-src="{{page.photos.photoArray[0].url}}" id="photo_1" ng-show="viewed"> -->
         <img ng-click="newPage(city); vote(page, page.photos.photoArray[0]._id)" ng-src="{{page.photos.photoArray[0].url}}" id="photo_1" ng-show="viewed">
 
       </div>
@@ -77,6 +76,10 @@
               <input type="radio" name="city" ng-click="changeCity(city)" ng-checked="$first"> {{city}}
             </label>
           </div>
+          <!-- <br>
+          <a href="">
+            <button ng-click="newPage(city); browseModal=false; browse=false" class="btn btn-primary">Submit</button>
+          </a> -->
         </div>
       </div>
     </form>

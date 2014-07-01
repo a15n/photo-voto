@@ -16,25 +16,30 @@ angular.module('photoVotoApp')
 
     //sets a new page
     $scope.newPage = function (city) {
+
       $scope.viewed = true;
-      var randomNumber = Math.random();
-      if(city !== undefined){
-        $http.get('api/v1/Pages/?$and={"city":"' + city + '","randomNumber":">=' + randomNumber + '"}&sort=randomNumber&limit=1')
-        .success(function(data) {
-          if(data !== undefined) {
-            $scope.page = data[0];
-          } else {
-            $http.get('api/v1/Pages/?$and={"city":"' + city + '","randomNumber":"<=' + randomNumber + '"}&sort=randomNumber&limit=1')
-            .success(function(data) {
-              $scope.page = data[0];
-            });
-          }
-        });
+      var randomNumber = Math.floor(Math.random() * $scope.user.indexes.length);
+      if (city) {
+        // $http.get('api/v1/Pages/?$and={"city":"' + city + '"}')
+        // .success(function(data){
+        // MUST RESET THE $scupe.user.indexes variable to only include city-matched indexes
+        //   $scope.page = data[$scope.user.indexes[randomNumber]];
+        //   $scope.user.indexes.splice(randomNumber,1);
+        //   if ($scope.user.indexes.length === 0) {
+        //     console.log("COOMMMEENNYEEAAHHAAA");
+        //     console.log("http://www.youtube.com/watch?v=dQw4w9WgXcQ");
+        //   }
+        // })
       } else {
-        $http.get('api/v1/Pages/?$and={"randomNumber":">=' + randomNumber + '"}&sort=randomNumber&limit=1')
-        .success(function(data) {
-            $scope.page = data[0];
-        });
+        $http.get('api/v1/Pages/')
+        .success(function(data){
+          $scope.page = data[$scope.user.indexes[randomNumber]];
+          $scope.user.indexes.splice(randomNumber,1);
+          if ($scope.user.indexes.length === 0) {
+            console.log("COOMMMEENNYEEAAHHAAA");
+            console.log("http://www.youtube.com/watch?v=dQw4w9WgXcQ");
+          }
+        })
       }
     };
 
@@ -82,11 +87,8 @@ angular.module('photoVotoApp')
               var photoArray = page.photos.photoArray;
               var instagramPhotoUrl = instagramJsonp[uui].images.standard_resolution.url;
               if (photoArray[0].url === instagramPhotoUrl || photoArray[1].url === instagramPhotoUrl || photoArray[2].url === instagramPhotoUrl || photoArray[3].url === instagramPhotoUrl) {
-                  // console.log('duplicate url match at ' + uui + '. url not assigned');
-                  // uui for-loop continues
               } else {
                 tempObject.url = instagramPhotoUrl;
-                // console.log('no duplicate url match at ' + uui + '. url ASSIGNED!');
                 uui = 20; //use this to jump out of the loop
               }
             }
@@ -96,7 +98,6 @@ angular.module('photoVotoApp')
           }
           $http.put('/api/v1/Pages/' + page._id, page)
           .success(function(data) {
-            console.log("put ID page has been updated.");
           });
         });
       }, 1000);
@@ -107,6 +108,7 @@ angular.module('photoVotoApp')
         $scope.city = undefined;
       } else {
         $scope.city = city;
+        // MUST ALSO REDEFINE THE $scope.user.indexes array
       }
       console.log($scope.city)
     }
@@ -119,10 +121,16 @@ angular.module('photoVotoApp')
     setScreenSize();
     $(window).resize(setScreenSize);
 
-    //Hacky way to list all of the cities (way's to search) in the DB
+    //List all of the cities (way's to search) in the DB. This happens on the landing page.
     $scope.cities = [];
     $http.get('/api/v1/Pages/')
     .success(function(data) {
+      $scope.user = {};
+      $scope.user.indexes = [];
+      var i = 0, dataLength = data.length;
+      for (i; i < dataLength; i++) {
+        $scope.user.indexes.push(i);
+      }
       var tempArray = [];
       for (var index in data) {
         tempArray.push(data[index].city);
@@ -132,5 +140,7 @@ angular.module('photoVotoApp')
       });
       $scope.cities.sort().unshift("All");
     })
+
+
 
   });

@@ -34,11 +34,17 @@ angular.module('photoVotoApp')
       }
     };
 
+    $scope.practice = function (url) {
+      var urlObject = {url: url};
+      $http.post('/api/basketball', urlObject);
+    }
+
     $scope.submitAttractions = function ($scope) {
       //locally saves the form variables
       var url = $scope.url;
       var pages = $scope.pages;
-      //2 resets the page inputs
+
+      //resets the page inputs
       $scope.url = "";
       $scope.pages = "";
 
@@ -154,10 +160,13 @@ angular.module('photoVotoApp')
     };
 
     $scope.clearEverything = function ($scope) {
-      $http.delete('/api/v1/Pages/')
-      .success(function(data){
-        console.log("Pages DB deleted");
-      });
+      var answer = confirm("Delete everything?");
+      if (answer == true) {
+        $http.delete('/api/v1/Pages/')
+        .success(function(data){
+          console.log("Pages DB deleted");
+        });
+      }
     };
 
     $scope.revisePage = function (page, tempObject){
@@ -182,35 +191,6 @@ angular.module('photoVotoApp')
         });
       }, 5000);
     };
-
-//     $scope.randomize = function() {
-//       // var randomNumber = Math.random();
-//       // console.log(randomNumber);
-//       // $http.get('/api/v1/Pages?query="randomNumber":{$lte:' + randomNumber + "}")
-//       // .success(function(data){
-//       //   if (data == null) {
-//       //     console.log("nothing found");
-//       //   }
-//       //   console.log(data[0].attraction);
-//       // });
-
-// // > result = db.docs.findOne( { key : 2, random : { $gte : rand } } )
-// // > if ( result == null ) {
-// // >   result = db.docs.findOne( { key : 2, random : { $lte : rand } } )
-// // > }
-
-//     }
-
-
-
-
-    //http://localhost/api/v1/Customers?query={"field":">=value", "field":[value1,value2]
-
-
-      // $http.delete('/api/v1/Pages/')
-      // .success(function(data){
-      //   console.log("Pages DB deleted");
-      // });
 
     //bring page to the login page
     $http.get('/api/v1/Pages/')

@@ -1,5 +1,5 @@
 
-<div class="row" ng-hide="loggedIn">
+<div class="row" ng-show="false">
   <div class="col-sm-1"></div>
   <div class="col-sm-10">
     <div class="col-sm-12">
@@ -43,19 +43,22 @@
 
 
 
-<div class="row" ng-controller="LoginCtrl" ng-show="loggedIn">
+<div class="row" ng-controller="LoginCtrl" ng-show="true">
   <div  class="col-sm-3 height100">
     <h1 class="bira attraction">voto</h1>
     <div style="color:red">
-      <form class="simple-form" ng-submit="submitAttractions(submission)" name="">
+      <!-- <form class="simple-form" ng-submit="submitAttractions(submission) practice()" name=""> -->
+      <form class="simple-form" ng-submit="practice()" name="">
         URL: <input type="text" ng-model="submission.url" name="url" /><br><br>
         Pages: <input type="text" ng-model="submission.pages" name="pages" /><br><br>
         <input type="submit" id="submit" value="submit attractions" />
       </form>
       <button ng-click="clearEverything()" class="btn btn-delete">clear attractions</button>
+      <button ng-click="practice('http://www.kimonolabs.com/api/43takhg6?apikey=0a1d375d04e46d6b8ff57584f2c1ddf9&kimpath1=Attractions-g60713-Activities-San_Francisco_California.html')" class="btn btn-delete">practice()</button>
+      <!-- <button ng-click="practice('https://api.instagram.com/v1/tags/yosemite/media/recent?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32')" class="btn btn-delete">practice()</button> -->
+      <br>
       <p>http://www.tripadvisor.com/Attractions-g60713-Activities-San_Francisco_California.html</p>
-      <p>http://www.tripadvisor.com/Attractions-g60763-Activities-New_York_City_New_York.html</p>
-      <p>http://www.tripadvisor.com/Attractions-g186338-Activities-London_England.html</p>
+
     </div>
   </div>
   <div class="col-sm-offset-3">
