@@ -36,8 +36,13 @@ angular.module('photoVotoApp')
           $scope.page = data[$scope.user.indexes[randomNumber]];
           $scope.user.indexes.splice(randomNumber,1);
           if ($scope.user.indexes.length === 0) {
-            console.log("COOMMMEENNYEEAAHHAAA");
             console.log("http://www.youtube.com/watch?v=dQw4w9WgXcQ");
+            console.log('resetting user index array.')
+            $scope.user.indexes = [];
+            var i = 0, dataLength = data.length;
+            for (i; i < dataLength; i++) {
+              $scope.user.indexes.push(i);
+            }
           }
         })
       }
