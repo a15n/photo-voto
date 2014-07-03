@@ -14,35 +14,50 @@ angular.module('photoVotoApp')
       });
     }
 
+    //sets the user index to ensure random, non-repeating pages are presented
+    function setIndexes (city) {
+      if (city) {
+        $http.get('api/v1/Pages/?$and={"city":"' + city + '"}').success(function(data){
+          $scope.user = {};
+          $scope.user.indexes = [];
+          for (var i = 0; i < data.length; i++) {
+            $scope.user.indexes[i] = i;
+          }
+        })
+      } else {
+        $http.get('api/v1/Pages/').success(function(data){
+          $scope.user = {};
+          $scope.user.indexes = [];
+          for (var i = 0; i < data.length; i++) {
+            $scope.user.indexes[i] = i;
+          }
+        })
+      }
+    }
+
     //sets a new page
     $scope.newPage = function (city) {
-
       $scope.viewed = true;
       var randomNumber = Math.floor(Math.random() * $scope.user.indexes.length);
       if (city) {
-        // $http.get('api/v1/Pages/?$and={"city":"' + city + '"}')
-        // .success(function(data){
-        // MUST RESET THE $scupe.user.indexes variable to only include city-matched indexes
-        //   $scope.page = data[$scope.user.indexes[randomNumber]];
-        //   $scope.user.indexes.splice(randomNumber,1);
-        //   if ($scope.user.indexes.length === 0) {
-        //     console.log("COOMMMEENNYEEAAHHAAA");
-        //     console.log("http://www.youtube.com/watch?v=dQw4w9WgXcQ");
-        //   }
-        // })
+        $http.get('api/v1/Pages/?$and={"city":"' + city + '"}')
+        .success(function(data){
+          $scope.page = data[$scope.user.indexes[randomNumber]];
+          $scope.user.indexes.splice(randomNumber,1);
+          if ($scope.user.indexes.length === 1) {
+            setIndexes(city);
+            console.log("http://www.youtube.com/watch?v=dQw4w9WgXcQ");
+          }
+
+        })
       } else {
         $http.get('api/v1/Pages/')
         .success(function(data){
           $scope.page = data[$scope.user.indexes[randomNumber]];
           $scope.user.indexes.splice(randomNumber,1);
-          if ($scope.user.indexes.length === 0) {
+          if ($scope.user.indexes.length === 1) {
+            setIndexes();
             console.log("http://www.youtube.com/watch?v=dQw4w9WgXcQ");
-            console.log('resetting user index array.')
-            $scope.user.indexes = [];
-            var i = 0, dataLength = data.length;
-            for (i; i < dataLength; i++) {
-              $scope.user.indexes.push(i);
-            }
           }
         })
       }
@@ -111,31 +126,26 @@ angular.module('photoVotoApp')
     $scope.changeCity = function (city){
       if (city === "All") {
         $scope.city = undefined;
+        setIndexes();
       } else {
         $scope.city = city;
-        // MUST ALSO REDEFINE THE $scope.user.indexes array
+        setIndexes(city);
       }
-      console.log($scope.city)
     }
-
 
     //initiallized to false to see the open page
     $scope.viewed = false
 
-    //resizes the photo box
+    //sizes the photo box initally and on screen resize
     setScreenSize();
     $(window).resize(setScreenSize);
 
-    //List all of the cities (way's to search) in the DB. This happens on the landing page.
+    $scope.user = {};
+
+    //List all of the cities plus "All" option
     $scope.cities = [];
     $http.get('/api/v1/Pages/')
     .success(function(data) {
-      $scope.user = {};
-      $scope.user.indexes = [];
-      var i = 0, dataLength = data.length;
-      for (i; i < dataLength; i++) {
-        $scope.user.indexes.push(i);
-      }
       var tempArray = [];
       for (var index in data) {
         tempArray.push(data[index].city);
@@ -145,6 +155,8 @@ angular.module('photoVotoApp')
       });
       $scope.cities.sort().unshift("All");
     })
+
+    setIndexes();
 
 
 

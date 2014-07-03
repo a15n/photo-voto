@@ -1,23 +1,25 @@
 <div class="row" ng-controller="SettingsCtrl">
-  <div  class="col-sm-12 height100">
-    <h1 class="bira attraction">voto</h1>
-    <div style="color:red">
+  <div>
+    <h1 class="pacifico_l">Voto - Admin</h1>
+    <div class="nmnp">
 
+      <br>
       <form class="simple-form" ng-submit="submitAttractions(submission)" name="">
-        URL: <input type="text" ng-model="submission.url" name="url" /><br><br>
-        <input type="submit" id="submit" value="submit attractions" />
+        <input type="text" ng-model="submission.url" name="url" placeholder="TripAdvisor URL" size="35" style="color:black"/>
+        <br>
+        <br>
+        <button type="submit" class="btn btn-custom nixie_m" value="submit attractions">Submit</button>
       </form>
-      <button ng-click="clearEverything()" class="btn btn-delete">clear attractions</button>
-
-      <button ng-hide="true" ng-click="practice('http://www.kimonolabs.com/api/43takhg6?apikey=0a1d375d04e46d6b8ff57584f2c1ddf9&kimpath1=Attractions-g60713-Activities-San_Francisco_California.html')" class="btn btn-delete">practice()</button>
+      <br>
+      <button ng-click="clearEverything()" class="btn btn-danger nixie_m">Clear Attractions</button>
 
       <br>
       <br>
 
     </div>
   </div>
-  <div class="col-sm-12">
-    <table id="dashboard">
+  <!-- <div class="col-sm-12"> -->
+    <table id="dashboard" class="nmnp">
 
       <th>City</th>
       <th>Attraction</th>
@@ -29,30 +31,30 @@
       <th>p1%</th>
       <th>p2%</th>
       <th>p3%</th>
-      <th>p4%</th>
+
 
       <th>Sub</th>
       <th>Del</th>
-      <th>....</th>
+
       <form>
         <tr ng-repeat="page in pages">
 
-          <td>{{page.city}}</td>
-          <td>{{page.attraction}}</td>
+          <td>{{page.city}}&nbsp;</td>
+          <td>{{page.attraction}}&nbsp;</td>
           <td>{{page.views}}</td>
-          <td>{{page.hashtag}}</td>
+          <td>{{page.hashtag}}&nbsp;</td>
           <td><input type="text" ng-model="tempObject.hashtag"></td>
 
           <td ng-class="{warning: page.photos.photoArray.length < 4}">{{page.photos.photoArray.length}}</td>
           <td>{{page.photos.photoArray[0].approval}}</td>
           <td>{{page.photos.photoArray[1].approval}}</td>
           <td>{{page.photos.photoArray[2].approval}}</td>
-          <td>{{page.photos.photoArray[3].approval}}</td>
-          <td></td>
+
           <td><span class="glyphicon glyphicon-ok" ng-click="revisePage(page, tempObject)" style="color:yellow"></span></td>
           <td><span class="glyphicon glyphicon-remove" ng-click="deletePage(page)" style="color:red"></span></td>
         </tr>
       </form>
     </table>
-  </div>
+    <br>
+  <!-- </div> -->
 </div>
