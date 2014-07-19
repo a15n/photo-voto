@@ -73,26 +73,25 @@ angular.module('photoVotoApp')
 
     //used on all subsequent pages. applies vote to DB, advances page
     $scope.vote = function (page, photoId) {
+      //setTimeout used to divert computing power until one second after the newPage function has been called
       setTimeout(function(){
         page.views++;
         var i = 0;
-        var royals = 0; //resets royal count to 0 before it repopulates it
-        for (i; i < 4; i++) { //cycles through the 4 photos (index 0-3)
+        var royals = 0; //resets each page's royals count to 0 and repopulates it accurately during the function
+        for (i; i < 4; i++) {
           var photo = page.photos.photoArray[i];
-          photo.views++; //every photo has been viewed now
+          photo.views++; //every photo has been viewed at least once
           if (photo._id === photoId) {
-
             photo.votes++;
           } //only the clicked photo receives a vote
           photo.approval = Math.round(photo.votes / photo.views * 100); // (0-100) every photo gets an approval rating
-
           if (photo.approval > 0) {
             royals++;
           }
         }
-        page.photos.royalty = royals;
+        page.photos.royalty = royals; //reassign royals count
         sortByKey(page.photos.photoArray, "approval").reverse();
-        $http.jsonp('https://api.instagram.com/v1/tags/' + page.hashtag + '/media/recent?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32&callback=JSON_CALLBACK')
+        $http.jsonp('https://api.instagram.com/v1/tags/' + page.hashtag + '/media/recent?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32&callback=JSON_CALLBACK') //finds new photos depending on how many photos have a 0% approval rating
         .success(function(data){
           var instagramJsonp = data.data;
           if (page.photos.royalty === 4) {
