@@ -3,6 +3,33 @@
 angular.module('photoVotoApp')
   .controller('MainCtrl', function ($scope, $http) {
 
+    //sets a new page
+    $scope.newPage = function (city) {
+      $scope.viewed = true;
+      var randomNumber = Math.floor(Math.random() * $scope.user.indexes.length);
+      if (city) {
+        $http.get('api/v1/Pages/?$and={"city":"' + city + '"}')
+        .success(function(data){
+          $scope.page = data[$scope.user.indexes[randomNumber]];
+          $scope.user.indexes.splice(randomNumber,1);
+          if ($scope.user.indexes.length === 0) {
+            setIndexes(city);
+            console.log("Congrats, you have now seen every photo of " + city + "!");
+          }
+        })
+      } else {
+        $http.get('api/v1/Pages/')
+        .success(function(data){
+          $scope.page = data[$scope.user.indexes[randomNumber]];
+          $scope.user.indexes.splice(randomNumber,1);
+          if ($scope.user.indexes.length === 0) {
+            setIndexes();
+            console.log("Congrats, you have now seen every photo!");
+          }
+        })
+      }
+    };
+
     //function that dynamically sizes the photo box. Used on screen.load and screen.resize
     function setScreenSize () {
       var imageHeight = $('#imageRow').height();
@@ -35,91 +62,92 @@ angular.module('photoVotoApp')
       }
     }
 
-    //sets a new page
-    $scope.newPage = function (city) {
-      $scope.viewed = true;
-      var randomNumber = Math.floor(Math.random() * $scope.user.indexes.length);
-      if (city) {
-        $http.get('api/v1/Pages/?$and={"city":"' + city + '"}')
-        .success(function(data){
-          $scope.page = data[$scope.user.indexes[randomNumber]];
-          $scope.user.indexes.splice(randomNumber,1);
-          if ($scope.user.indexes.length === 1) {
-            setIndexes(city);
-            console.log("http://www.youtube.com/watch?v=dQw4w9WgXcQ");
-          }
+    // sorts the photoArray in descending approval order during the setRoyals function (http://repl.it/Wwj)
+    function sortByApproval(photoArray) {
+      var result = photoArray.sort(function(a, b){
+        if (a.approval > b.approval) {
+          return -1;
+        } else if (a.approval < b.approval) {
+          return 1;
+        } else {
+          return 0;
+        }
+      });
+      return result;
+    }
 
-        })
-      } else {
-        $http.get('api/v1/Pages/')
-        .success(function(data){
-          $scope.page = data[$scope.user.indexes[randomNumber]];
-          $scope.user.indexes.splice(randomNumber,1);
-          if ($scope.user.indexes.length === 1) {
-            setIndexes();
-            console.log("http://www.youtube.com/watch?v=dQw4w9WgXcQ");
-          }
-        })
+    // assigns the correct royals rank, score, and order to each photo.
+    function setRoyals(page, photoId) {
+      //resets each page's royals count to 0 and repopulates it during the function.
+      var royals = 0;
+      for (var i = 0; i < 4; i++) {
+        var photo = page.photos.photoArray[i];
+        // every photo has been viewed at least once
+        photo.views++;
+        // only the clicked photo receives a vote
+        if (photo._id === photoId) {
+          photo.votes++;
+        }
+        // (0-100) every photo gets an approval rating
+        photo.approval = Math.round(photo.votes / photo.views * 100);
+        // royals are only counted if they have a >0 approval rating
+        if (photo.approval > 0) {
+          royals++;
+        }
       }
-    };
+      //reassign royals count
+      page.photos.royalty = royals;
+      page.photos.photoArray = sortByApproval(page.photos.photoArray);
+      return page;
+    }
 
-    // used in the photo re-arranging section of the vote function
-    function sortByKey(array, key) {
-      return array.sort(function(a, b) {
-        var x = a[key]; var y = b[key];
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    // return true if instagram photo is not contained with the photoArray
+    function photoIsUnique(photoArray, instagramPhotoUrl){
+      if (photoArray[0].url === instagramPhotoUrl || photoArray[1].url === instagramPhotoUrl || photoArray[2].url === instagramPhotoUrl || photoArray[3].url === instagramPhotoUrl){
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    // finds new, unique photos for each photo without a royalty rating
+    function refreshRoyaltyPhotos(page) {
+      $http.jsonp('https://api.instagram.com/v1/tags/' + page.hashtag + '/media/recent?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32&callback=JSON_CALLBACK')
+      .success(function(data){
+        var instagramJsonp = data.data;
+        // if 4 royalty found the lowest scoring photo will be reassigned. Only 3 / 4 photos will remain
+        if (page.photos.royalty === 4) {
+          var k = 3;
+        } else {
+          var k = page.photos.royalty;
+        }
+        // photos k -> 4 are then replaced with the first unique instagram URL found in the instagram API call
+        for (k; k < 4; k++) {
+          var tempObject = {};
+          var instagramJsonpLength = 20;
+          for (var uui = 0; uui <= instagramJsonpLength; uui++) {
+            var photoArray = page.photos.photoArray;
+            var instagramPhotoUrl = instagramJsonp[uui].images.standard_resolution.url;
+            if (photoIsUnique(photoArray, instagramPhotoUrl) ) {
+              tempObject.url = instagramPhotoUrl;
+              break
+            }
+          }
+          tempObject.votes = 0;
+          tempObject.views = 0;
+          page.photos.photoArray.splice(k, 1, tempObject);
+        }
+        $http.put('/api/v1/Pages/' + page._id, page);
       });
     }
 
-    //used on all subsequent pages. applies vote to DB, advances page
     $scope.vote = function (page, photoId) {
-      //setTimeout used to divert computing power until one second after the newPage function has been called
+      // set timeout used to preserve computing power and prevent 'photo rearrange' before the next page's photos are shown.
       setTimeout(function(){
         page.views++;
-        var i = 0;
-        var royals = 0; //resets each page's royals count to 0 and repopulates it accurately during the function
-        for (i; i < 4; i++) {
-          var photo = page.photos.photoArray[i];
-          photo.views++; //every photo has been viewed at least once
-          if (photo._id === photoId) {
-            photo.votes++;
-          } //only the clicked photo receives a vote
-          photo.approval = Math.round(photo.votes / photo.views * 100); // (0-100) every photo gets an approval rating
-          if (photo.approval > 0) {
-            royals++;
-          }
-        }
-        page.photos.royalty = royals; //reassign royals count
-        sortByKey(page.photos.photoArray, "approval").reverse();
-        $http.jsonp('https://api.instagram.com/v1/tags/' + page.hashtag + '/media/recent?callback=?&amp;client_id=a91636c3098f409d8c8c55a2bd255a32&callback=JSON_CALLBACK') //finds new photos depending on how many photos have a 0% approval rating
-        .success(function(data){
-          var instagramJsonp = data.data;
-          if (page.photos.royalty === 4) {
-            var k = 3;
-          } else {
-            var k = page.photos.royalty;
-          }
-          for (k; k < 4; k++) {
-            var tempObject = {};
-            var uui = 0;
-            for (uui; uui <= 20; uui++) {
-              var photoArray = page.photos.photoArray;
-              var instagramPhotoUrl = instagramJsonp[uui].images.standard_resolution.url;
-              if (photoArray[0].url === instagramPhotoUrl || photoArray[1].url === instagramPhotoUrl || photoArray[2].url === instagramPhotoUrl || photoArray[3].url === instagramPhotoUrl) {
-              } else {
-                tempObject.url = instagramPhotoUrl;
-                uui = 20; //use this to jump out of the loop
-              }
-            }
-            tempObject.votes = 0;
-            tempObject.views = 0;
-            page.photos.photoArray.splice(k ,1, tempObject);
-          }
-          $http.put('/api/v1/Pages/' + page._id, page)
-          .success(function(data) {
-          });
-        });
-      }, 1000);
+        page = setRoyals(page, photoId);
+        refreshRoyaltyPhotos(page);
+      }, 1000)
     };
 
     $scope.changeCity = function (city){
@@ -156,7 +184,5 @@ angular.module('photoVotoApp')
     })
 
     setIndexes();
-
-
 
   });
